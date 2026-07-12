@@ -366,8 +366,8 @@ export default function CategoryPage() {
                         const isVisible = visiblePasswords.has(`${entry.id}-${field.name}`)
                         return (
                           <div key={field.name} className="flex items-center gap-2 text-sm">
-                            <span className="text-gray-500 min-w-[80px]">{field.label}:</span>
-                            <span className="text-gray-900 font-mono">
+                            <span className="text-gray-500 min-w-[60px] sm:min-w-[80px] flex-shrink-0">{field.label}:</span>
+                            <span className="text-gray-900 font-mono break-all">
                               {isPassword && !isVisible ? maskValue(value) : value}
                             </span>
                             {isPassword && (

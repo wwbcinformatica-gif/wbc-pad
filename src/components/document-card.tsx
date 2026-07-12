@@ -106,34 +106,34 @@ function CNHCard({ name, number, cpf, birthDate, expiry, categories, observation
             {categories && (
               <div className="text-right flex-shrink-0">
                 <p className="text-[7px] uppercase tracking-widest text-white/50 mb-0.5">Cat</p>
-                <p className="text-[10px] font-mono font-bold drop-shadow-sm">{categories}</p>
+                <p className="text-[10px] font-mono font-bold drop-shadow-sm break-all">{categories}</p>
               </div>
             )}
           </div>
-          <div className="grid grid-cols-3 gap-x-2 gap-y-1">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-2 gap-y-1">
             <div>
               <p className="text-[7px] uppercase tracking-widest text-white/50 mb-0.5">CPF</p>
-              <p className="text-[9px] font-mono drop-shadow-sm">{cpf || number}</p>
+              <p className="text-[9px] font-mono drop-shadow-sm break-all">{cpf || number}</p>
             </div>
             <div>
               <p className="text-[7px] uppercase tracking-widest text-white/50 mb-0.5">Reg</p>
-              <p className="text-[9px] font-mono drop-shadow-sm">{regNumber || "--"}</p>
+              <p className="text-[9px] font-mono drop-shadow-sm break-all">{regNumber || "--"}</p>
             </div>
             <div>
               <p className="text-[7px] uppercase tracking-widest text-white/50 mb-0.5">Nascimento</p>
-              <p className="text-[9px] font-mono drop-shadow-sm">{formatDateBR(birthDate)}</p>
+              <p className="text-[9px] font-mono drop-shadow-sm break-all">{formatDateBR(birthDate)}</p>
             </div>
             <div>
               <p className="text-[7px] uppercase tracking-widest text-white/50 mb-0.5">1ª Habilitação</p>
-              <p className="text-[9px] font-mono drop-shadow-sm">{formatDateBR(firstLicense)}</p>
+              <p className="text-[9px] font-mono drop-shadow-sm break-all">{formatDateBR(firstLicense)}</p>
             </div>
             <div>
               <p className="text-[7px] uppercase tracking-widest text-white/50 mb-0.5">Validade</p>
-              <p className="text-[9px] font-mono drop-shadow-sm">{formatDateBR(expiry)}</p>
+              <p className="text-[9px] font-mono drop-shadow-sm break-all">{formatDateBR(expiry)}</p>
             </div>
             <div>
               <p className="text-[7px] uppercase tracking-widest text-white/50 mb-0.5">Emissão</p>
-              <p className="text-[9px] font-mono drop-shadow-sm">{formatDateBR(issueDate)}</p>
+              <p className="text-[9px] font-mono drop-shadow-sm break-all">{formatDateBR(issueDate)}</p>
             </div>
           </div>
         </div>
@@ -292,30 +292,30 @@ function RGCard({ name, number, cpf, birthDate, issuer, expiry, issueDate, color
             <p className="text-[7px] uppercase tracking-widest text-white/50 mb-0.5">Nome</p>
             <p className="text-xs font-semibold truncate drop-shadow-sm">{name}</p>
           </div>
-          <div className="grid grid-cols-3 gap-x-2 gap-y-1">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-2 gap-y-1">
             <div>
               <p className="text-[7px] uppercase tracking-widest text-white/50 mb-0.5">RG</p>
-              <p className="text-[9px] font-mono drop-shadow-sm">{number || "--"}</p>
+              <p className="text-[9px] font-mono drop-shadow-sm break-all">{number || "--"}</p>
             </div>
             <div>
               <p className="text-[7px] uppercase tracking-widest text-white/50 mb-0.5">CPF</p>
-              <p className="text-[9px] font-mono drop-shadow-sm">{cpf || "--"}</p>
+              <p className="text-[9px] font-mono drop-shadow-sm break-all">{cpf || "--"}</p>
             </div>
             <div>
               <p className="text-[7px] uppercase tracking-widest text-white/50 mb-0.5">Nascimento</p>
-              <p className="text-[9px] font-mono drop-shadow-sm">{formatDateBR(birthDate)}</p>
+              <p className="text-[9px] font-mono drop-shadow-sm break-all">{formatDateBR(birthDate)}</p>
             </div>
             <div>
               <p className="text-[7px] uppercase tracking-widest text-white/50 mb-0.5">Órgão Emissor</p>
-              <p className="text-[9px] font-mono drop-shadow-sm">{issuer || "--"}</p>
+              <p className="text-[9px] font-mono drop-shadow-sm break-all">{issuer || "--"}</p>
             </div>
             <div>
               <p className="text-[7px] uppercase tracking-widest text-white/50 mb-0.5">Emissão</p>
-              <p className="text-[9px] font-mono drop-shadow-sm">{formatDateBR(issueDate)}</p>
+              <p className="text-[9px] font-mono drop-shadow-sm break-all">{formatDateBR(issueDate)}</p>
             </div>
             <div>
               <p className="text-[7px] uppercase tracking-widest text-white/50 mb-0.5">Validade</p>
-              <p className="text-[9px] font-mono drop-shadow-sm">{formatDateBR(expiry)}</p>
+              <p className="text-[9px] font-mono drop-shadow-sm break-all">{formatDateBR(expiry)}</p>
             </div>
           </div>
         </div>
@@ -454,15 +454,15 @@ function CPFCard({ name, number, cpf, issuer, expiry, issueDate, colors, visible
           <p className="text-[7px] uppercase tracking-widest text-white/50 mb-0.5">Nome</p>
           <p className="text-xs font-semibold truncate drop-shadow-sm">{name}</p>
         </div>
-        <div className="grid grid-cols-3 gap-x-2 gap-y-1">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-2 gap-y-1">
           <div>
             <p className="text-[7px] uppercase tracking-widest text-white/50 mb-0.5">CPF</p>
-            <p className="text-[11px] font-mono font-bold tracking-wider drop-shadow-sm">{cpf || number || "--"}</p>
+            <p className="text-[11px] font-mono font-bold tracking-wider drop-shadow-sm break-all">{cpf || number || "--"}</p>
           </div>
           {issuer && (
             <div>
               <p className="text-[7px] uppercase tracking-widest text-white/50 mb-0.5">Órgão Emissor</p>
-              <p className="text-[9px] font-mono drop-shadow-sm">{issuer}</p>
+              <p className="text-[9px] font-mono drop-shadow-sm break-all">{issuer}</p>
             </div>
           )}
           {issueDate && (

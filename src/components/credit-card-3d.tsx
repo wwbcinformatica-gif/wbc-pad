@@ -112,7 +112,7 @@ export function CreditCard3D({ title, fields, visible, onToggleVisibility, onCop
 
       {/* Middle section: Card Number */}
       <div className="relative z-10 my-2">
-        <p className="text-lg md:text-xl font-mono tracking-[0.15em] drop-shadow-sm">
+        <p className="text-lg md:text-xl font-mono tracking-[0.15em] drop-shadow-sm break-all">
           {displayNumber}
         </p>
       </div>
@@ -177,7 +177,7 @@ export function CreditCard3D({ title, fields, visible, onToggleVisibility, onCop
         {/* CVV */}
         <div className="bg-white/90 rounded-sm px-2.5 py-1.5 text-center min-w-[52px]">
           <p className="text-[8px] text-gray-500 font-bold">CVV</p>
-          <p className="text-sm font-bold font-mono tracking-wider text-gray-700">
+          <p className="text-sm font-bold font-mono tracking-wider text-gray-700 break-all">
             {visible ? cvv : "•••"}
           </p>
         </div>

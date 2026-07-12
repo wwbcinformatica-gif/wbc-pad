@@ -155,7 +155,7 @@ export default function EditAgendaPage() {
           <div className="px-6 py-3">
             <div className="h-1 w-16 bg-gradient-to-r from-amber-400 to-amber-500 rounded-full mb-3" />
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {/* Data */}
               <div className="bg-gray-50 rounded-lg p-2">
                 <label className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-0.5 block">Data</label>

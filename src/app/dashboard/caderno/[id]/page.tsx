@@ -56,7 +56,7 @@ export default async function CadernoViewPage({ params }: Props) {
         <div className="mx-8 h-px mb-2" style={{ background: "#d4c17f88" }} />
 
         <div
-          className="px-8 py-4 min-h-[300px] text-base text-gray-700 leading-relaxed prose prose-amber max-w-none"
+          className="px-8 py-4 min-h-[300px] text-base text-gray-700 leading-relaxed prose prose-amber max-w-none break-words overflow-x-auto"
           style={{ fontFamily: "'Georgia', serif" }}
         >
           <ReactMarkdown remarkPlugins={[remarkGfm]}>

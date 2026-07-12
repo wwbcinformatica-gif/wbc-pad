@@ -278,7 +278,7 @@ export default function CadernoEditor({
     <>
       {/* Fixed toolbar bar — always visible below the dashboard header */}
       <div className="fixed top-16 left-0 right-0 z-40 flex justify-center pt-1 pb-3 bg-gradient-to-b from-[var(--theme-bg)] via-[var(--theme-bg)] to-transparent pointer-events-none">
-        <div className="flex items-center gap-0.5 px-3 py-2 rounded-lg border border-gray-200/70 bg-white shadow-lg pointer-events-auto">
+        <div className="flex items-center gap-0.5 px-3 py-2 rounded-lg border border-gray-200/70 bg-white shadow-lg pointer-events-auto overflow-x-auto">
           <ToolBtn title="Negrito" onClick={() => execCmd("bold")}><Bold className="w-[15px] h-[15px] text-violet-500 hover:text-violet-600" /></ToolBtn>
            <ToolBtn title="Itálico" onClick={() => execCmd("italic")}><Italic className="w-[15px] h-[15px] text-fuchsia-500 hover:text-fuchsia-600" /></ToolBtn>
            <ToolBtn title="Riscado" onClick={() => execCmd("strikeThrough")}><Strikethrough className="w-[15px] h-[15px] text-rose-500 hover:text-rose-600" /></ToolBtn>

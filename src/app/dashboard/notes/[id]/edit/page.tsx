@@ -260,7 +260,7 @@ export default function EditNotePage() {
           {/* === AGENDA: Notebook lines + planner === */}
           {type === "agenda" && (
             <div className="notebook-page px-10 pb-8 pt-4">
-              <div className="relative z-10 grid grid-cols-2 gap-4 mb-4 pt-4">
+              <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4 pt-4">
                 <div>
                   <label className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1 block">Data</label>
                   <input
@@ -285,7 +285,7 @@ export default function EditNotePage() {
               </div>
 
               {!agendaAllDay && (
-                <div className="relative z-10 grid grid-cols-2 gap-4 mb-4">
+                <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1 block flex items-center gap-1">
                       <Clock className="w-3 h-3" /> Início
@@ -324,7 +324,7 @@ export default function EditNotePage() {
                 />
               </div>
 
-              <div className="relative z-10 grid grid-cols-2 gap-4 mb-4">
+              <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
                   <label className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1 block flex items-center gap-1">
                     <Bell className="w-3 h-3" /> Lembrete

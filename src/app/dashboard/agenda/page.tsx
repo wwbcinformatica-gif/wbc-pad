@@ -203,7 +203,7 @@ function AgendaPageContent() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <div className="relative w-56">
+          <div className="relative w-full md:w-56">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[var(--theme-primary)] focus:ring-2 focus:ring-[var(--theme-primary)]/10 bg-white"
@@ -287,7 +287,7 @@ function AgendaPageContent() {
                   </div>
 
                   {/* Content */}
-                  <div className="p-5 pt-5 pr-20">
+                  <div className="p-5 pt-5 pr-4 lg:pr-20">
                     <h3 className="font-bold text-gray-900 text-base mb-3 line-clamp-1">{note.title || "Sem título"}</h3>
 
                     {/* Time row */}
