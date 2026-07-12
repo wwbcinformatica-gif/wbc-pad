@@ -1,0 +1,439 @@
+"use client"
+
+import React, { useState, useRef, useEffect, useCallback } from "react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import {
+  ArrowLeft, Tag, X, CheckSquare, Strikethrough,
+  Bold, Italic, Save, Pin, PinOff, Trash2, Download,
+  RotateCcw, RotateCw
+} from "lucide-react"
+
+/* ─────────── Markdown ↔ HTML conversion ─────────── */
+
+function markdownToHtml(md: string): string {
+  const normalized = md.replace(/\r\n/g, "\n").replace(/\r/g, "\n")
+  if (!normalized.trim()) return ""
+  
+  return normalized.split("\n").map((line, idx) => {
+    // 1. Limpa os espaços e tabulações em branco nas pontas da linha
+    const trimmedLine = line.trim()
+    
+    // 2. Procura o checkbox de forma flexível no texto já limpo
+    const cbMatch = trimmedLine.match(/^(?:[-*]\s+)?\[([ xX])\]\s*(.*)$/)
+    
+    if (cbMatch) {
+      const checked = cbMatch[1].toLowerCase() === "x"
+      const text = cbMatch[2]
+        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+        .replace(/~~(.*?)~~/g, "<del>$1</del>")
+        .replace(/_(.*?)_/g, "<em>$1</em>")
+      const attr = checked ? " checked" : ""
+      return `<span class="ce-cb-line"><input type="checkbox"${attr}><span>${text}</span></span>`
+    }
+    
+    const html = line
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      .replace(/~~(.*?)~~/g, "<del>$1</del>")
+      .replace(/_(.*?)_/g, "<em>$1</em>")
+    return html || "<br>"
+  }).join("<br>")
+}
+
+function serializeToMarkdown(html: string): string {
+  let text = html
+    .replace(/<br>/gi, "\n")
+    .replace(/<\/span>/g, "")
+    .replace(/<span[^>]*>/g, "")
+    .replace(/<strong>(.*?)<\/strong>/g, "**$1**")
+    .replace(/<em>(.*?)<\/em>/g, "_$1_")
+    .replace(/<del>(.*?)<\/del>/g, "~~$1~~")
+    .replace(/<input[^>]*type="checkbox"[^>]*checked[^>]*>/g, "- [x] ")
+    .replace(/<input[^>]*checked[^>]*type="checkbox"[^>]*>/g, "- [x] ")
+    .replace(/<input[^>]*type="checkbox"[^>]*>/g, "- [ ] ")
+    .replace(/<input[^>]*>/g, "- [ ] ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim()
+  
+  return text
+}
+
+/* ─────────── Notebook paper wrapper ─────────── */
+function NotebookPaper({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      className="rounded-sm overflow-hidden"
+      style={{
+        background: "linear-gradient(180deg, #fdf8e1 0%, #fef9e4 100%)",
+        border: "1px solid #e8d98a",
+        borderLeft: "8px solid #f59e0b",
+        boxShadow: "3px 4px 16px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
+      }}
+    >
+      {children}
+    </div>
+  )
+}
+
+const NOTEBOOK_LEFT_BAR_WIDTH = 8 // px
+
+/* ─────────── Toolbar ─────────── */
+function Toolbar({
+  onBold, onItalic, onStrike, onCheckbox, onUndo, onRedo,
+  isVisible = true,
+}: {
+  onBold: () => void
+  onItalic: () => void
+  onStrike: () => void
+  onCheckbox: () => void
+  onUndo: () => void
+  onRedo: () => void
+  isVisible?: boolean
+}) {
+  if (!isVisible) return null
+
+  return (
+    <div
+      className="sticky top-0 z-50 mb-2"
+      style={{ marginLeft: -NOTEBOOK_LEFT_BAR_WIDTH, marginRight: -1 }}
+    >
+      <div
+        className="flex items-center gap-1 px-4 py-2 border-b shadow-lg rounded-t-sm"
+        style={{
+          borderColor: "#e8d98a",
+          background: "rgba(245,158,11,0.98)",
+          marginLeft: NOTEBOOK_LEFT_BAR_WIDTH,
+        }}
+      >
+        <ToolBtn title="Negrito" onClick={onBold} onMouseDown={(e) => e.preventDefault()}><Bold className="w-4 h-4" /></ToolBtn>
+        <ToolBtn title="Itálico" onClick={onItalic} onMouseDown={(e) => e.preventDefault()}><Italic className="w-4 h-4" /></ToolBtn>
+        <ToolBtn title="Riscado / Razura" onClick={onStrike} onMouseDown={(e) => e.preventDefault()}><Strikethrough className="w-4 h-4" /></ToolBtn>
+        <div className="w-px h-5 bg-amber-300/60 mx-1" />
+        <ToolBtn title="Checkbox" onClick={onCheckbox} onMouseDown={(e) => e.preventDefault()}><CheckSquare className="w-4 h-4" /></ToolBtn>
+        <ToolBtn title="Desfazer" onClick={onUndo} onMouseDown={(e) => e.preventDefault()}><RotateCcw className="w-4 h-4" /></ToolBtn>
+        <ToolBtn title="Refazer" onClick={onRedo} onMouseDown={(e) => e.preventDefault()}><RotateCw className="w-4 h-4" /></ToolBtn>
+        <div className="flex-1" />
+        <span className="text-[10px] text-amber-600/80 hidden sm:block pr-2">
+          Ctrl+B · Ctrl+I · Ctrl+Shift+X · Ctrl+Z · Ctrl+Y
+        </span>
+      </div>
+    </div>
+  )
+}
+
+function ToolBtn({
+  title, onClick, children, active, onMouseDown,
+}: {
+  title: string; onClick: () => void; children: React.ReactNode; active?: boolean; onMouseDown?: (e: React.MouseEvent) => void
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      onMouseDown={onMouseDown}
+      title={title}
+      className={`p-1.5 rounded transition-colors text-amber-800 hover:bg-amber-200/60 ${active ? "bg-amber-100/80" : ""}`}
+    >
+      {children}
+    </button>
+  )
+}
+
+/* ─────────── Tags bar ─────────── */
+function TagsBar({
+  tags, setTags,
+}: {
+  tags: string[]; setTags: (t: string[]) => void
+}) {
+  const [input, setInput] = useState("")
+
+  function add() {
+    const t = input.trim().toLowerCase()
+    if (t && !tags.includes(t)) setTags([...tags, t])
+    setInput("")
+  }
+
+  return (
+    <div className="px-8 py-3" style={{ borderTop: "1px solid #e8d98a" }}>
+      <div className="flex items-center gap-2 flex-wrap">
+        <Tag className="w-4 h-4 text-amber-600 flex-shrink-0" />
+        {tags.map((tag) => (
+          <span key={tag} className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-amber-200 text-amber-800 font-medium">
+            {tag}
+            <button type="button" onClick={() => setTags(tags.filter((t) => t !== tag))} className="hover:text-red-600">
+              <X className="w-3 h-3" />
+            </button>
+          </span>
+        ))}
+        <input
+          type="text"
+          className="flex-1 min-w-[120px] bg-transparent border-none outline-none text-sm text-amber-800 placeholder-amber-400"
+          placeholder="Adicionar tag... (Enter)"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); add() } }}
+          onBlur={add}
+        />
+      </div>
+    </div>
+  )
+}
+
+/* ─────────── Main editor component ─────────── */
+export interface CadernoEditorProps {
+  title: string
+  setTitle: (v: string) => void
+  content: string
+  setContent: (v: string) => void
+  tags: string[]
+  setTags: (v: string[]) => void
+  pinned?: boolean
+  onTogglePin?: () => void
+  saving: boolean
+  error: string
+  onSubmit: (e: React.FormEvent) => void
+  onDelete?: () => void
+  backHref: string
+  pageTitle: string
+}
+
+export default function CadernoEditor({
+  title, setTitle, content, setContent, tags, setTags,
+  pinned, onTogglePin, saving, error, onSubmit, onDelete,
+  backHref, pageTitle,
+}: CadernoEditorProps) {
+  const editorRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef(content)
+  const initialized = useRef(false)
+  const [isEditorFocused, setIsEditorFocused] = useState(false)
+
+  useEffect(() => {
+    contentRef.current = content
+  })
+
+  const syncToState = useCallback(() => {
+    if (!editorRef.current) return
+    const md = serializeToMarkdown(editorRef.current.innerHTML)
+    if (md !== contentRef.current) {
+      setContent(md)
+    }
+  }, [setContent])
+
+  /* Init / re-init when content changes externally */
+  useEffect(() => {
+    if (!editorRef.current) return
+    if (!initialized.current) {
+      editorRef.current.innerHTML = markdownToHtml(content)
+      initialized.current = true
+      return
+    }
+    const currentMd = serializeToMarkdown(editorRef.current.innerHTML)
+    if (currentMd !== content) {
+      editorRef.current.innerHTML = markdownToHtml(content)
+    }
+  }, [content])
+
+  /* Keyboard shortcuts */
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.ctrlKey || e.metaKey) {
+      if (e.key === "b") { e.preventDefault(); document.execCommand("bold") }
+      else if (e.key === "i") { e.preventDefault(); document.execCommand("italic") }
+      else if (e.key === "x" && e.shiftKey) { e.preventDefault(); document.execCommand("strikeThrough") }
+      else if (e.key === "z" && !e.shiftKey) { e.preventDefault(); document.execCommand("undo") }
+      else if (e.key === "y" || (e.key === "z" && e.shiftKey)) { e.preventDefault(); document.execCommand("redo") }
+      setTimeout(syncToState, 0)
+    }
+    if (e.key === "Enter") {
+      setTimeout(syncToState, 0)
+    }
+  }, [syncToState])
+
+  function execCmd(cmd: string, value?: string) {
+    if (editorRef.current) editorRef.current.focus()
+    document.execCommand(cmd, false, value)
+    setTimeout(syncToState, 0)
+  }
+
+  function insertCheckbox() {
+    if (!editorRef.current) return
+    editorRef.current.focus()
+    const sel = window.getSelection()
+    if (!sel || !sel.rangeCount) return
+    const range = sel.getRangeAt(0)
+
+    const wrapper = document.createElement("span")
+    wrapper.className = "ce-cb-wrapper"
+
+    const cb = document.createElement("input")
+    cb.type = "checkbox"
+    cb.className = "ce-cb"
+    cb.setAttribute("contenteditable", "false")
+    cb.addEventListener("change", () => setTimeout(syncToState, 0))
+
+    wrapper.appendChild(cb)
+    wrapper.appendChild(document.createTextNode("\u00A0"))
+
+    range.deleteContents()
+    range.insertNode(wrapper)
+    range.setStartAfter(wrapper)
+    range.collapse(true)
+    sel.removeAllRanges()
+    sel.addRange(range)
+    setTimeout(syncToState, 0)
+  }
+
+  function handlePaste(e: React.ClipboardEvent) {
+    e.preventDefault()
+    const text = e.clipboardData.getData("text/plain")
+    document.execCommand("insertText", false, text)
+    setTimeout(syncToState, 0)
+  }
+
+  function handleInput() {
+    setTimeout(syncToState, 0)
+  }
+
+  const handleCheckboxNative = useCallback((e: React.MouseEvent) => {
+    const target = e.target as HTMLElement
+    if (target.tagName === "INPUT" && (target as HTMLInputElement).type === "checkbox") {
+      e.preventDefault()
+      const checkbox = target as HTMLInputElement
+      checkbox.checked = !checkbox.checked
+      setTimeout(syncToState, 0)
+    }
+  }, [syncToState])
+
+  function handleDownload() {
+    const txt = `${title}\n\n${content}`
+    const blob = new Blob([txt], { type: "text/plain;charset=utf-8" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `${title || "pagina"}.txt`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
+  function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    syncToState()
+    window.requestAnimationFrame(() => onSubmit(e))
+  }
+
+  return (
+    <div className="max-w-3xl mx-auto">
+      {/* Page header */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <Link href={backHref}>
+            <Button variant="ghost" size="sm"><ArrowLeft className="w-4 h-4" /></Button>
+          </Link>
+          <h1 className="text-xl font-bold text-gray-900">{pageTitle}</h1>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button type="button" variant="ghost" size="sm" onClick={handleDownload}
+            className="text-amber-600" title="Download TXT">
+            <Download className="w-4 h-4" />
+          </Button>
+          {onTogglePin && (
+            <Button type="button" variant="ghost" size="sm" onClick={onTogglePin}
+              className={pinned ? "text-amber-600" : "text-gray-400"} title={pinned ? "Desafixar" : "Fixar"}>
+              {pinned ? <Pin className="w-4 h-4 fill-amber-500" /> : <PinOff className="w-4 h-4" />}
+            </Button>
+          )}
+          {onDelete && (
+            <Button type="button" variant="ghost" size="sm" onClick={onDelete}
+              className="text-red-400 hover:text-red-600 hover:bg-red-50" title="Excluir">
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          )}
+        </div>
+      </div>
+
+      <form onSubmit={handleFormSubmit}>
+        <NotebookPaper>
+          <Toolbar
+            onBold={() => execCmd("bold")}
+            onItalic={() => execCmd("italic")}
+            onStrike={() => execCmd("strikeThrough")}
+            onCheckbox={insertCheckbox}
+            onUndo={() => execCmd("undo")}
+            onRedo={() => execCmd("redo")}
+            isVisible={isEditorFocused}
+          />
+          {/* Lines background */}
+          <div
+            className="relative"
+            style={{
+              backgroundImage: "repeating-linear-gradient(transparent, transparent 35px, #d4c17f55 35px, #d4c17f55 36px)",
+              backgroundSize: "100% 36px",
+              backgroundPosition: "0 52px",
+            }}
+          >
+            {/* Title */}
+            <input
+              className="w-full px-8 pt-6 pb-2 text-2xl font-bold border-none outline-none bg-transparent text-gray-800 placeholder-amber-300"
+              style={{ fontFamily: "'Georgia', serif", lineHeight: "36px" }}
+              placeholder="Título da página..."
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+            <div className="mx-8 h-px mb-1" style={{ background: "#d4c17f88" }} />
+
+            {/* Rich editor (always visible) */}
+            <div
+              ref={editorRef}
+              tabIndex={0}
+              contentEditable
+              suppressContentEditableWarning
+              onInput={handleInput}
+              onKeyDown={handleKeyDown}
+              onPaste={handlePaste}
+              onClick={handleCheckboxNative}
+              onMouseUp={() => {
+                setTimeout(syncToState, 0)
+              }}
+              onFocus={() => setIsEditorFocused(true)}
+              onBlur={() => setIsEditorFocused(false)}
+              className="caderno-editor w-full px-8 py-4 min-h-[480px] bg-transparent outline-none resize-none text-base text-gray-700"
+              style={{
+                fontFamily: "'Georgia', serif",
+                lineHeight: "36px",
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-word",
+              }}
+              data-placeholder="Escreva aqui..."
+            />
+          </div>
+
+          <TagsBar tags={tags} setTags={setTags} />
+        </NotebookPaper>
+
+        {error && (
+          <div className="mt-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">{error}</div>
+        )}
+
+        <div className="flex items-center justify-between mt-6">
+          <Link href={backHref}>
+            <Button type="button" variant="ghost">Cancelar</Button>
+          </Link>
+          <Button
+            type="submit"
+            disabled={saving || !title.trim()}
+            className="bg-amber-500 hover:bg-amber-600 text-white gap-2"
+          >
+            <Save className="w-4 h-4" />
+            {saving ? "Salvando..." : "Salvar"}
+          </Button>
+        </div>
+      </form>
+    </div>
+  )
+}

@@ -1,0 +1,25 @@
+ficou perfeito as cores a tarja branca, mas o problema maior é que a tools não pode mover com a folha se não acontece o mesmo problema, se eu estou digitando la embaixo na ultima linha e precisar usar alguma opção da tools eu tenho que rolar a folha toda escolher o checbox depois tenho que rolar a folha até a ultima linhha de novo para adicionar  ai fica perdendo tempo
+
+
+Preciso de ajuda para corrigir o posicionamento da barra de ferramentas (tools) na página de edição. Atualmente, ela está sumindo e entrando para dentro do cabeçalho (header) branco quando eu uso o scroll da página para ler ou digitar nas linhas de baixo. 
+
+Ficar rolando a página inteira para cima só para clicar em um botão da ferramenta e depois rolar tudo para baixo novamente está atrasando o meu trabalho.
+
+Por favor, altere o código CSS e HTML seguindo estas diretrizes:
+
+1. Mude a orientação da barra de ferramentas (tools) para a HORIZONTAL. Os ícones devem ficar lado a lado.
+2. Fixe a barra no topo de forma horizontal, para que ela NUNCA se mova com a rolagem (scroll) da folha. Ela deve acompanhar a tela o tempo todo.
+3. Se o header branco lá de cima já for fixo, configure a barra de ferramentas com `position: fixed` logo abaixo dele, ou coloque a estrutura da tools dentro do próprio elemento do header.
+4. Centralize a barra horizontalmente na tela e garanta que ela tenha um `z-index` alto para que nenhum texto da folha passe por cima dos botões.
+
+Ajuste o arquivo do componente ou os estilos responsáveis por essa barra para refletir essa mudança permanentemente. Me mostre onde aplicar a correção.
+
+Deploy realizado. Agora a barra de ferramentas está:
+- position: fixed — nunca se move com o scroll
+- top-16 — logo abaixo do header do dashboard (64px)
+- Horizontal — ícones lado a lado
+- Centrada na tela — flex justify-center
+- z-40 — sempre acima do conteúdo da folha
+- Fundo branco com sombra e borda — destacada visualmente
+- pt-14 no conteúdo para não sobrepor o texto
+

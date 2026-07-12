@@ -1,0 +1,312 @@
+@import "tailwindcss";
+
+:root {
+  --wbc-primary: #13d0d0;
+  --wbc-secondary: #2fc281;
+  --wbc-accent: #13d0d07d;
+  --theme-primary: #13d0d0;
+  --theme-secondary: #2fc281;
+  --theme-bg: #f5f7fa;
+  --theme-card: #ffffff;
+  --theme-sidebar: #ffffff;
+  --theme-text: #0d0d0f;
+  --theme-accent: #13d0d0;
+}
+
+@theme inline {
+  --color-background: #ffffff;
+  --color-foreground: #0a0a0a;
+  --color-gray-50: #f7f7f8;
+  --color-gray-100: #ececed;
+  --color-gray-200: #d4d4d8;
+  --color-gray-300: #b0b0b8;
+  --color-gray-400: #888894;
+  --color-gray-500: #63636f;
+  --color-gray-600: #4a4a54;
+  --color-gray-700: #34343c;
+  --color-gray-800: #1f1f24;
+  --color-gray-900: #0d0d0f;
+  --color-gray-950: #060608;
+}
+
+body {
+  font-family: "Red Hat Display", system-ui, -apple-system, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer base {
+  * {
+    @apply border-gray-200;
+  }
+  body {
+    @apply bg-white text-gray-900;
+  }
+}
+
+/* ============ PAPEL BRANCO (Notas) ============ */
+.paper-white {
+  background-color: #ffffff;
+  min-height: 500px;
+  position: relative;
+}
+
+.paper-white textarea,
+.paper-white input {
+  background: transparent !important;
+}
+
+/* ============ CADERNO COM LINHAS (Agenda) ============ */
+.notebook-page {
+  background-color: #fffdf8;
+  background-image:
+    linear-gradient(90deg, #ffddd6 1px, transparent 1px),
+    linear-gradient(transparent, transparent 1.9rem, #e8e8e8 1.9rem);
+  background-size:
+    44px 100%,
+    100% 2rem;
+  background-position:
+    40px 0,
+    0 0;
+  min-height: 600px;
+  position: relative;
+}
+
+.notebook-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 38px;
+  height: 100%;
+  width: 1px;
+  background: #ffddd6;
+}
+
+.notebook-page textarea,
+.notebook-page input {
+  background: transparent !important;
+  position: relative;
+  z-index: 1;
+}
+
+.notebook-page textarea::placeholder,
+.notebook-page input::placeholder {
+  color: #d4d4d4;
+}
+
+/* ============ CADERNO BACKGROUND ============ */
+.caderno-bg {
+  position: relative;
+}
+
+.caderno-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      transparent,
+      transparent 1.9rem,
+      #f0f0f0 1.9rem,
+      #f0f0f0 2rem
+    );
+  background-size: 100% 2rem;
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+/* ============ AGENDA CARD ============ */
+.agenda-card {
+  border-left: 4px solid var(--theme-primary);
+}
+
+.agenda-card.status-done {
+  border-left-color: var(--theme-secondary);
+  opacity: 0.7;
+}
+
+.agenda-card.status-cancelled {
+  border-left-color: #ef4444;
+  opacity: 0.6;
+}
+
+/* ============ GLASS / 3D ELEVATION ============ */
+.glass {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.08),
+    0 4px 6px -4px rgba(0, 0, 0, 0.04);
+}
+
+.btn-3d {
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:
+    0 8px 20px -6px rgba(0, 0, 0, 0.15),
+    0 4px 8px -4px rgba(0, 0, 0, 0.1),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.35);
+  transform: translateY(0);
+}
+
+.btn-3d:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 16px 30px -8px rgba(0, 0, 0, 0.2),
+    0 8px 12px -6px rgba(0, 0, 0, 0.12),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.35);
+}
+
+.btn-3d:active {
+  transform: translateY(-1px);
+  box-shadow:
+    0 6px 12px -4px rgba(0, 0, 0, 0.15),
+    0 3px 6px -4px rgba(0, 0, 0, 0.08),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* Primary button extra glow */
+.btn-glow {
+  box-shadow:
+    0 8px 24px -6px rgba(19, 208, 208, 0.3),
+    0 4px 12px -4px rgba(47, 194, 129, 0.2),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.35);
+}
+
+.btn-glow:hover {
+  box-shadow:
+    0 16px 36px -8px rgba(19, 208, 208, 0.4),
+    0 8px 16px -6px rgba(47, 194, 129, 0.3),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.35);
+}
+
+.nav-item-3d {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.04);
+  transform: translateY(0);
+}
+
+.nav-item-3d:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 20px -6px rgba(0, 0, 0, 0.1),
+    0 4px 8px -4px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.nav-item-3d:active {
+  transform: translateY(-1px);
+}
+
+.nav-item-3d.active {
+  box-shadow:
+    0 8px 24px -6px rgba(19, 208, 208, 0.25),
+    0 4px 12px -4px rgba(47, 194, 129, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.icon-3d {
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.nav-item-3d:hover .icon-3d {
+  box-shadow:
+    0 6px 14px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transform: scale(1.05);
+}
+
+.icon-3d.active {
+  box-shadow:
+    0 6px 16px rgba(19, 208, 208, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* ============ CALENDAR GRID ============ */
+.agenda-time-grid {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 0;
+}
+
+.agenda-time-label {
+  color: #9ca3af;
+  font-size: 0.75rem;
+  padding: 0.5rem 0.5rem 0.5rem 0;
+  text-align: right;
+  border-top: 1px solid #f3f4f6;
+}
+
+.agenda-time-slot {
+  border-top: 1px solid #f3f4f6;
+  min-height: 2rem;
+}
+
+/* ============ CADERNO RICH EDITOR ============ */
+.caderno-editor[contenteditable]:empty::before {
+  content: attr(data-placeholder);
+  color: #fcd34d;
+  pointer-events: none;
+}
+
+.caderno-editor[contenteditable]:focus {
+  outline: none;
+}
+
+.caderno-editor .ce-cb-inline {
+  cursor: pointer;
+  user-select: none;
+  color: var(--theme-secondary, #2fc281);
+  font-weight: 600;
+  font-size: 1.1em;
+}
+
+.caderno-editor .ce-cb-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  min-height: 36px;
+  line-height: 36px;
+}
+
+.caderno-editor .ce-cb-line .ce-cb-inline {
+  flex-shrink: 0;
+  min-width: 1.4em;
+}
+
+.caderno-editor strong {
+  font-weight: 700;
+}
+
+.caderno-editor em {
+  font-style: italic;
+}
+
+.caderno-editor del {
+  text-decoration: line-through;
+  color: #9ca3af;
+}
+
+.caderno-editor div {
+  min-height: 36px;
+  line-height: 36px;
+}
