@@ -79,7 +79,7 @@ export function BankAccountCard({ title, fields, visible, onToggleVisibility, on
 
       <div className="absolute bottom-5 left-5 right-5 space-y-1">
         {agency && account && (
-          <p className="text-sm font-mono drop-shadow-sm break-all" style={{ color: `${style.text}cc` }}>
+          <p className="text-sm font-mono drop-shadow-sm break-words" style={{ color: `${style.text}cc` }}>
             {agency} / {account}
           </p>
         )}
@@ -94,7 +94,7 @@ export function BankAccountCard({ title, fields, visible, onToggleVisibility, on
             style={{ maxHeight: visible ? "2rem" : "0", opacity: visible ? 1 : 0 }}
           >
             <p className="text-[8px] uppercase tracking-widest mb-0.5" style={{ color: `${style.text}80` }}>Senha</p>
-            <p className="text-sm font-mono drop-shadow-sm break-all" style={{ color: `${style.text}cc` }}>
+            <p className="text-sm font-mono drop-shadow-sm break-words" style={{ color: `${style.text}cc` }}>
               {password}
             </p>
           </div>
@@ -156,11 +156,11 @@ export function BankAccountCard({ title, fields, visible, onToggleVisibility, on
       <div className="grid grid-cols-2 gap-4 mb-5 relative z-10">
         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3">
           <p className="text-[9px] uppercase tracking-widest opacity-60 mb-1">Agência</p>
-          <p className="text-base font-bold font-mono drop-shadow-sm break-all">{agency || "---"}</p>
+          <p className="text-base font-bold font-mono drop-shadow-sm break-words">{agency || "---"}</p>
         </div>
         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3">
           <p className="text-[9px] uppercase tracking-widest opacity-60 mb-1">Conta</p>
-          <p className="text-base font-bold font-mono drop-shadow-sm break-all">{account || "---"}</p>
+          <p className="text-base font-bold font-mono drop-shadow-sm break-words">{account || "---"}</p>
         </div>
       </div>
 
@@ -171,7 +171,7 @@ export function BankAccountCard({ title, fields, visible, onToggleVisibility, on
             <p className="text-[9px] uppercase tracking-widest opacity-60 mb-1 flex items-center gap-1">
               <QrCode className="w-3 h-3" /> Chave PIX
             </p>
-            <p className="text-sm font-semibold drop-shadow-sm break-all">{pix}</p>
+            <p className="text-sm font-semibold drop-shadow-sm break-words">{pix}</p>
           </div>
           {onCopy && (
             <button
@@ -188,7 +188,7 @@ export function BankAccountCard({ title, fields, visible, onToggleVisibility, on
       <div className="flex items-center justify-between relative z-10 pt-3 border-t border-white/10">
         <span className="text-sm opacity-80">Senha da conta</span>
         <div className="flex items-center gap-2">
-          <span className="text-sm font-mono break-all">{visible ? (fields.password || "---") : "••••••••"}</span>
+          <span className="text-sm font-mono break-words">{visible ? (fields.password || "---") : "••••••••"}</span>
           {onToggleVisibility && (
             <button
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleVisibility() }}

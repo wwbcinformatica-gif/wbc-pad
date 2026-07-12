@@ -367,7 +367,7 @@ export default function CategoryPage() {
                         return (
                           <div key={field.name} className="flex items-center gap-2 text-sm">
                             <span className="text-gray-500 min-w-[60px] sm:min-w-[80px] flex-shrink-0">{field.label}:</span>
-                            <span className="text-gray-900 font-mono break-all">
+                            <span className="text-gray-900 font-mono break-words">
                               {isPassword && !isVisible ? maskValue(value) : value}
                             </span>
                             {isPassword && (
