@@ -10,6 +10,9 @@ import { BankAccountCard } from "@/components/bank-account-card"
 import { CreditCard3D } from "@/components/credit-card-3d"
 import { DocumentCard } from "@/components/document-card"
 import { PASSWORD_CATEGORIES, type PasswordEntry } from "@/types"
+import VaultUnlock from "@/components/vault-unlock"
+import { getVaultKey, isVaultUnlocked } from "@/lib/vault"
+import { decrypt } from "@/lib/vault-crypto"
 import {
   Plus,
   ArrowLeft,
@@ -107,7 +110,25 @@ export default function CategoryPage() {
       .eq("category", category)
       .order("created_at", { ascending: false })
 
-    if (data) setEntries(data)
+    if (data) {
+      const key = getVaultKey()
+      if (key) {
+        const decrypted = await Promise.all(data.map(async (entry: any) => {
+          if (entry.fields?._encrypted) {
+            try {
+              const decryptedStr = await decrypt(entry.fields._encrypted, key)
+              return { ...entry, fields: JSON.parse(decryptedStr) }
+            } catch {
+              return entry
+            }
+          }
+          return entry
+        }))
+        setEntries(decrypted)
+      } else {
+        setEntries(data)
+      }
+    }
     setLoading(false)
   }
 
@@ -154,6 +175,7 @@ export default function CategoryPage() {
   }
 
   return (
+    <VaultUnlock>
     <div className="max-w-4xl mx-auto space-y-6">
        <div className="flex items-center justify-between">
          <div className="flex items-center gap-3">
@@ -388,5 +410,6 @@ export default function CategoryPage() {
         </div>
       )}
     </div>
+    </VaultUnlock>
   )
 }

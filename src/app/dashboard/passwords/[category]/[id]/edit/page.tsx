@@ -11,6 +11,8 @@ import { CreditCard3D } from "@/components/credit-card-3d"
 import { BankAccountCard } from "@/components/bank-account-card"
 import { DocumentCard } from "@/components/document-card"
 import { PASSWORD_CATEGORIES } from "@/types"
+import { getVaultKey } from "@/lib/vault"
+import { encrypt, decrypt } from "@/lib/vault-crypto"
 import { ArrowLeft, Save, Trash2, Eye, EyeOff, Copy } from "lucide-react"
 
 const BANKS = [
@@ -60,8 +62,16 @@ export default function EditPasswordPage() {
       .single()
 
     if (data) {
+      const key = getVaultKey()
+      let loadedFields = data.fields
+      if (key && data.fields?._encrypted) {
+        try {
+          const decryptedStr = await decrypt(data.fields._encrypted, key)
+          loadedFields = JSON.parse(decryptedStr)
+        } catch {}
+      }
       setTitle(data.title)
-      setFields(data.fields)
+      setFields(loadedFields)
       setNotes(data.notes || "")
     }
     setLoading(false)
@@ -72,9 +82,16 @@ export default function EditPasswordPage() {
     if (!title.trim()) return
     setSaving(true)
 
+    const key = getVaultKey()
+    let fieldsToSave = fields
+    if (key) {
+      const encrypted = await encrypt(JSON.stringify(fields), key)
+      fieldsToSave = { _encrypted: encrypted } as Record<string, string>
+    }
+
     await supabase
       .from("passwords")
-      .update({ title: title.trim(), fields, notes, updated_at: new Date().toISOString() })
+      .update({ title: title.trim(), fields: fieldsToSave, notes, updated_at: new Date().toISOString() })
       .eq("id", id)
 
     router.push(`/dashboard/passwords/${category}`)

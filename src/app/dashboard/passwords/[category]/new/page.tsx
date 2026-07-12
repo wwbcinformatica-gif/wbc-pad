@@ -11,6 +11,8 @@ import { CreditCard3D } from "@/components/credit-card-3d"
 import { BankAccountCard } from "@/components/bank-account-card"
 import { DocumentCard } from "@/components/document-card"
 import { PASSWORD_CATEGORIES } from "@/types"
+import { getVaultKey } from "@/lib/vault"
+import { encrypt } from "@/lib/vault-crypto"
 import { ArrowLeft, Save, Eye, EyeOff, Copy } from "lucide-react"
 
 const BANKS = [
@@ -61,11 +63,18 @@ export default function NewPasswordPage() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
 
+    const key = getVaultKey()
+    let fieldsToSave = fields
+    if (key) {
+      const encrypted = await encrypt(JSON.stringify(fields), key)
+      fieldsToSave = { _encrypted: encrypted } as Record<string, string>
+    }
+
     const { error } = await supabase.from("passwords").insert({
       user_id: user.id,
       category,
       title: title.trim(),
-      fields,
+      fields: fieldsToSave,
       notes,
     })
 
