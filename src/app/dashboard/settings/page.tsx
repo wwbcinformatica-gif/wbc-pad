@@ -6,6 +6,7 @@ import { useSound } from "@/contexts/sound-context"
 import { SOUND_LIST } from "@/lib/sounds"
 import { THEMES, applyTheme, loadSavedTheme } from "@/lib/themes"
 import { Button } from "@/components/ui/button"
+import InstallApp from "@/components/install-app"
 import { Volume2, VolumeX, Music, Palette, Check, Play, ArrowLeft, Share2, Copy, ExternalLink, Database } from "lucide-react"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase"
@@ -184,6 +185,9 @@ export default function SettingsPage() {
           </div>
         </div>
       </div>
+
+      {/* === INSTALAR === */}
+      <InstallApp />
 
       {/* === THEMES === */}
       <div className="space-y-4">

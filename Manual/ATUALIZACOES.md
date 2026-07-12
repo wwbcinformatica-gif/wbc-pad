@@ -118,6 +118,37 @@ vercel deploy --prod --yes
 
 ---
 
+## 6. Ajustes Responsivos para Mobile
+
+**Problema:** Textos vazavam para fora da área de visualização em celulares, exigindo rolagem horizontal para ler.
+
+### Correções aplicadas:
+
+| Problema | Arquivos | Correção |
+|---|---|---|
+| Toolbar do editor de caderno não rolava horizontalmente | `src/components/caderno-editor.tsx` | Adicionado `overflow-x-auto` na toolbar |
+| Cards de agenda com padding direito excessivo | `src/app/dashboard/agenda/page.tsx` | `pr-20` → `pr-4 lg:pr-20` |
+| Search bars com largura fixa `w-56` | `checklist/page.tsx`, `notes/page.tsx`, `caderno/page.tsx`, `agenda/page.tsx` | `w-56` → `w-full md:w-56` |
+| Texto `font-mono` sem quebra de linha | `credit-card-3d.tsx`, `bank-account-card.tsx`, `document-card.tsx`, `passwords/[category]/page.tsx` | Adicionado `break-words` em campos longos (senhas, números de cartão, chaves PIX) |
+| Grids de 2 colunas sem empilhamento em mobile | `notes/[id]/edit/page.tsx`, `agenda/[id]/edit/page.tsx`, `admin/page.tsx` | `grid-cols-2` → `grid-cols-1 sm:grid-cols-2` |
+| Grids de 3 colunas em documentos muito apertados | `document-card.tsx` | `grid-cols-3` → `grid-cols-2 sm:grid-cols-3` |
+| Label de senhas com largura mínima fixa | `passwords/[category]/page.tsx` | `min-w-[80px]` → `min-w-[60px] sm:min-w-[80px]` |
+| Markdown sem proteção de overflow | `caderno/[id]/page.tsx` | Adicionado `overflow-x-auto break-words` |
+
+---
+
+## 7. Instalação do Aplicativo (PWA / Atalho)
+
+**Novo arquivo:** `src/components/install-app.tsx`
+
+Adicionado na página de Configurações (`/dashboard/settings`):
+
+- **Instalar como aplicativo** — Botão que aciona o prompt de instalação do navegador (Chrome/Edge) para PWA
+- **Instalar no iPhone/iPad** — Instruções passo-a-passo para adicionar à Tela de Início pelo Safari
+- **Atalho para área de trabalho** — Download de arquivo `.url` (Windows) ou `.webloc` (Mac) com ícone e link do app
+
+---
+
 ## Arquivos Criados
 
 | Arquivo | Descrição |
@@ -125,6 +156,7 @@ vercel deploy --prod --yes
 | `src/lib/vault-crypto.ts` | Módulo de criptografia AES-256-GCM + PBKDF2 |
 | `src/lib/vault.ts` | Gerenciamento de estado do vault |
 | `src/components/vault-unlock.tsx` | Componente de desbloqueio do vault |
+| `src/components/install-app.tsx` | Componente de instalação do app / atalho |
 
 ## Arquivos Modificados
 
@@ -137,3 +169,16 @@ vercel deploy --prod --yes
 | `src/app/dashboard/passwords/[category]/page.tsx` | Vault unlock + descriptografia |
 | `src/app/dashboard/passwords/[category]/new/page.tsx` | Criptografia ao salvar |
 | `src/app/dashboard/passwords/[category]/[id]/edit/page.tsx` | Descriptografia + criptografia |
+| `src/components/credit-card-3d.tsx` | `break-words` em número do cartão |
+| `src/components/bank-account-card.tsx` | `break-words` em agência/conta/senha/PIX |
+| `src/components/document-card.tsx` | `break-words` + grids responsivos |
+| `src/components/caderno-editor.tsx` | `overflow-x-auto` na toolbar |
+| `src/app/dashboard/agenda/page.tsx` | Search `w-full md:w-56`, card `pr-4 lg:pr-20` |
+| `src/app/dashboard/checklist/page.tsx` | Search `w-full md:w-56` |
+| `src/app/dashboard/notes/page.tsx` | Search `w-full md:w-56` |
+| `src/app/dashboard/caderno/page.tsx` | Search `w-full md:w-56` |
+| `src/app/dashboard/caderno/[id]/page.tsx` | `overflow-x-auto break-words` no markdown |
+| `src/app/dashboard/notes/[id]/edit/page.tsx` | Grids responsivos `sm:grid-cols-2` |
+| `src/app/dashboard/agenda/[id]/edit/page.tsx` | Grid responsivo `sm:grid-cols-2` |
+| `src/app/dashboard/admin/page.tsx` | Grids responsivos no modal de edição |
+| `src/app/dashboard/settings/page.tsx` | Seção "Instalar Aplicativo" adicionada |
