@@ -45,7 +45,7 @@ export async function deriveKey(masterPassword: string, saltBase64: string): Pro
     },
     keyMaterial,
     { name: "AES-GCM", length: KEY_LENGTH },
-    false,
+    true,
     ["encrypt", "decrypt"]
   )
 }

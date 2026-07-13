@@ -1,14 +1,12 @@
 let vaultKey: CryptoKey | null = null
-let initDone = false
 
 async function initFromStorage() {
-  if (initDone) return
-  initDone = true
+  if (vaultKey) return
   const stored = typeof window !== "undefined" ? localStorage.getItem("vault_key") : null
   if (!stored) return
   try {
     const raw = Uint8Array.from(atob(stored), (c) => c.charCodeAt(0))
-    vaultKey = await crypto.subtle.importKey("raw", raw, { name: "AES-GCM" }, false, ["encrypt", "decrypt"])
+    vaultKey = await crypto.subtle.importKey("raw", raw, { name: "AES-GCM" }, true, ["encrypt", "decrypt"])
   } catch {
     localStorage.removeItem("vault_key")
   }

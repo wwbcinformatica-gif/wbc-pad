@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useSound } from "@/contexts/sound-context"
+import { FONT_SIZES, useFontSize } from "@/contexts/font-size-context"
 import { SOUND_LIST } from "@/lib/sounds"
 import { THEMES, applyTheme, loadSavedTheme } from "@/lib/themes"
 import { Button } from "@/components/ui/button"
@@ -15,6 +16,7 @@ import { testDatabaseConnection } from "@/lib/supabase"
 export default function SettingsPage() {
   const router = useRouter()
   const { enabled, volume, selectedSound, navSound, setEnabled, setVolume, setSelectedSound, setNavSound, saveToDatabase, playPreview } = useSound()
+  const { fontSize, setFontSize } = useFontSize()
   const [currentTheme, setCurrentTheme] = useState("teal-spring")
   const [previewSound, setPreviewSound] = useState<string | null>(null)
   const [saved, setSaved] = useState(false)
@@ -223,6 +225,44 @@ export default function SettingsPage() {
               {currentTheme === theme.id && (
                 <div className="absolute top-2 right-2 w-6 h-6 bg-[var(--theme-primary)] rounded-full flex items-center justify-center shadow-md">
                   <Check className="w-3.5 h-3.5 text-white" />
+                </div>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* === FONT SIZE === */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 flex items-center justify-center">
+            <span className="text-emerald-500 font-bold text-lg">Aa</span>
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900">Tamanho da Fonte</h2>
+            <p className="text-sm text-gray-500">Escolha o tamanho do texto nos editores</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {FONT_SIZES.map((size) => (
+            <button
+              key={size.id}
+              onClick={() => setFontSize(size.id)}
+              className={`relative rounded-2xl p-4 text-center transition-all duration-300 btn-3d ${
+                fontSize === size.id
+                  ? "ring-2 ring-[var(--theme-primary)] ring-offset-2 bg-[var(--theme-primary)]/5"
+                  : "bg-white border border-gray-200/80 hover:border-gray-300"
+              }`}
+            >
+              <div className="mb-2">
+                <span className="font-mono font-semibold text-gray-900" style={{ fontSize: size.code }}>{size.preview}</span>
+              </div>
+              <p className="text-xs font-medium text-gray-600">{size.label}</p>
+              <p className="text-[10px] text-gray-400 mt-0.5">{size.code}</p>
+              {fontSize === size.id && (
+                <div className="absolute top-2 right-2 w-5 h-5 bg-[var(--theme-primary)] rounded-full flex items-center justify-center shadow-md">
+                  <Check className="w-3 h-3 text-white" />
                 </div>
               )}
             </button>
