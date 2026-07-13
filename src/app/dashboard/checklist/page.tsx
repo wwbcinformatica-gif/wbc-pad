@@ -1,7 +1,7 @@
 "use client"
 
 import { Suspense, useState, useEffect } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter, usePathname, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
@@ -36,16 +36,21 @@ function ChecklistPageContent() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingTitle, setEditingTitle] = useState("")
   const router = useRouter()
+  const pathname = usePathname()
   const supabase = createClient()
 
   useEffect(() => {
     loadNotes()
-  }, [])
+  }, [pathname])
 
-  async function loadNotes() {
+  async function loadNotes(retries = 5) {
     const { data: { session } } = await supabase.auth.getSession()
     const user = session?.user
     if (!user) {
+      if (retries > 0) {
+        await new Promise(r => setTimeout(r, 300))
+        return loadNotes(retries - 1)
+      }
       setLoading(false)
       return
     }

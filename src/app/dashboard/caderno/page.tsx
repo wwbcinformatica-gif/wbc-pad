@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
@@ -26,14 +26,19 @@ export default function CadernoPage() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
   const router = useRouter()
+  const pathname = usePathname()
   const supabase = createClient()
 
-  useEffect(() => { load() }, [])
+  useEffect(() => { load() }, [pathname])
 
-  async function load() {
+  async function load(retries = 5) {
     const { data: { session } } = await supabase.auth.getSession()
     const user = session?.user
     if (!user) {
+      if (retries > 0) {
+        await new Promise(r => setTimeout(r, 300))
+        return load(retries - 1)
+      }
       setLoading(false)
       return
     }

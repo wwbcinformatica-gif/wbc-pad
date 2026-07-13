@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
@@ -38,16 +38,24 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [subscriptionStatus, setSubscriptionStatus] = useState("")
   const router = useRouter()
+  const pathname = usePathname()
   const supabase = createClient()
 
   useEffect(() => {
     loadData()
-  }, [])
+  }, [pathname])
 
-  async function loadData() {
+  async function loadData(retries = 5) {
     const { data: { session } } = await supabase.auth.getSession()
     const user = session?.user
-    if (!user) { router.push("/login"); return }
+    if (!user) {
+      if (retries > 0) {
+        await new Promise(r => setTimeout(r, 300))
+        return loadData(retries - 1)
+      }
+      router.push("/login")
+      return
+    }
 
     const { data: profile } = await supabase
       .from("profiles").select("subscription_status").eq("id", user.id).single()
