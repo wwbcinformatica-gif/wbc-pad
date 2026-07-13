@@ -40,7 +40,6 @@ export default function DashboardLayout({
   useEffect(() => {
     const search = typeof window !== "undefined" ? window.location.search : ""
     setActiveHref(pathname + search)
-    router.refresh()
   }, [pathname])
 
   useEffect(() => {
@@ -197,7 +196,7 @@ export default function DashboardLayout({
         )}
 
         <main className="flex-1 min-h-0 p-4 md:p-6 lg:p-8 overflow-y-auto max-w-7xl mx-auto w-full">
-          {children}
+          <div key={pathname}>{children}</div>
         </main>
       </div>
     </div>
