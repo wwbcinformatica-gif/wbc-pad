@@ -92,13 +92,13 @@ function AgendaPageContent() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
   const router = useRouter()
+  const supabase = createClient()
 
   useEffect(() => {
     loadNotes()
   }, [])
 
   async function loadNotes(retries = 3) {
-    const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
       if (retries > 0) {

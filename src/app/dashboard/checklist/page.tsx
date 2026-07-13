@@ -36,13 +36,13 @@ function ChecklistPageContent() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingTitle, setEditingTitle] = useState("")
   const router = useRouter()
+  const supabase = createClient()
 
   useEffect(() => {
     loadNotes()
   }, [])
 
   async function loadNotes(retries = 3) {
-    const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
       if (retries > 0) {
