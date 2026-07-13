@@ -29,16 +29,18 @@ export default function CadernoPage() {
   const pathname = usePathname()
   const supabase = createClient()
 
-  useEffect(() => { load() }, [pathname])
+  useEffect(() => {
+    load()
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      load()
+    })
+    return () => subscription.unsubscribe()
+  }, [pathname])
 
-  async function load(retries = 5) {
+  async function load() {
     const { data: { session } } = await supabase.auth.getSession()
     const user = session?.user
     if (!user) {
-      if (retries > 0) {
-        await new Promise(r => setTimeout(r, 300))
-        return load(retries - 1)
-      }
       setLoading(false)
       return
     }

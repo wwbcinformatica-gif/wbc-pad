@@ -44,16 +44,18 @@ export default function CodigosPage() {
   const { theme } = useCodeTheme()
   const isDark = theme === "dark"
 
-  useEffect(() => { load() }, [pathname])
+  useEffect(() => {
+    load()
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      load()
+    })
+    return () => subscription.unsubscribe()
+  }, [pathname])
 
-  async function load(retries = 5) {
+  async function load() {
     const { data: { session } } = await supabase.auth.getSession()
     const user = session?.user
     if (!user) {
-      if (retries > 0) {
-        await new Promise(r => setTimeout(r, 300))
-        return load(retries - 1)
-      }
       setLoading(false)
       return
     }
@@ -103,8 +105,19 @@ export default function CodigosPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500" />
+      <div className="max-w-6xl mx-auto space-y-8">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-indigo-100 border border-indigo-200">
+            <Terminal className="w-6 h-6 text-indigo-600" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Códigos</h1>
+            <p className="text-sm text-gray-500">Carregando...</p>
+          </div>
+        </div>
+        <div className="w-full h-1 bg-gray-200 rounded-full overflow-hidden">
+          <div className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full animate-[pulse_1.5s_ease-in-out_infinite]" style={{ width: "60%" }} />
+        </div>
       </div>
     )
   }
