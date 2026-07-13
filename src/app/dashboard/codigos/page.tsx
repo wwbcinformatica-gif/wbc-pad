@@ -111,8 +111,8 @@ export default function CodigosPage() {
 
   if (loading) {
     return (
-      <div className="max-w-6xl mx-auto space-y-8">
-        <div className="flex items-center gap-4">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex items-center gap-4 mb-8">
           <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-indigo-100 border border-indigo-200">
             <Terminal className="w-6 h-6 text-indigo-600" />
           </div>
@@ -120,9 +120,6 @@ export default function CodigosPage() {
             <h1 className="text-2xl font-bold text-gray-900">Códigos</h1>
             <p className="text-sm text-gray-500">Carregando...</p>
           </div>
-        </div>
-        <div className="w-full h-1 bg-gray-200 rounded-full overflow-hidden">
-          <div className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full animate-[pulse_1.5s_ease-in-out_infinite]" style={{ width: "60%" }} />
         </div>
       </div>
     )
