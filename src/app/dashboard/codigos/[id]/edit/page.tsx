@@ -92,7 +92,7 @@ export default function EditCodigoPage({ params }: { params: Promise<{ id: strin
   }
 
   return (
-    <div className="flex flex-col overflow-hidden" style={{ height: '100%' }}>
+    <div className="flex flex-col">
       <div className="shrink-0 pb-4">
         <div className="flex items-center gap-4">
           <Link href={`/dashboard/codigos/${id}`}>
@@ -107,10 +107,10 @@ export default function EditCodigoPage({ params }: { params: Promise<{ id: strin
         </div>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto">
+      <div className="flex-1">
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="flex gap-3 flex-col sm:flex-row">
-            <div className="flex-1">
+      <div className="min-h-0 flex-1 overflow-y-auto">
               <label className="block text-sm font-medium text-gray-700 mb-1">Título</label>
               <input
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200"

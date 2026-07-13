@@ -69,7 +69,7 @@ export default function CodigoViewPage({ params }: Props) {
   }
 
   return (
-    <div className="flex flex-col overflow-hidden" style={{ height: '100%' }}>
+    <div className="flex flex-col">
       <div className="shrink-0 pb-4">
         <div className="flex items-center justify-between">
           <Link href="/dashboard/codigos">
