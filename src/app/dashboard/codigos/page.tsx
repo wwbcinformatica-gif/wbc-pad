@@ -45,7 +45,13 @@ export default function CodigosPage() {
   const isDark = theme === "dark"
 
   useEffect(() => {
-    load()
+    const start = Date.now()
+    load().then(() => {
+      const elapsed = Date.now() - start
+      if (elapsed < 500) {
+        setTimeout(() => setLoading(false), 500 - elapsed)
+      }
+    })
     const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
       load()
     })

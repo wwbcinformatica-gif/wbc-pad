@@ -35,7 +35,7 @@ export default function CadernoPage() {
       load()
     })
     return () => subscription.unsubscribe()
-  }, [pathname])
+  }, [])
 
   async function load() {
     const { data: { session } } = await supabase.auth.getSession()
