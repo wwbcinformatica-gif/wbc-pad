@@ -6,9 +6,9 @@ type FontSizeId = "small" | "medium" | "large" | "xlarge"
 
 export const FONT_SIZES: { id: FontSizeId; label: string; code: string; preview: string }[] = [
   { id: "small", label: "Pequena", code: "12px", preview: "Aa" },
-  { id: "medium", label: "Média", code: "14px", preview: "Aa" },
-  { id: "large", label: "Grande", code: "16px", preview: "Aa" },
-  { id: "xlarge", label: "Extra Grande", code: "18px", preview: "Aa" },
+  { id: "medium", label: "Média", code: "13px", preview: "Aa" },
+  { id: "large", label: "Grande", code: "15px", preview: "Aa" },
+  { id: "xlarge", label: "Extra Grande", code: "17px", preview: "Aa" },
 ]
 
 interface FontSizeContextType {
@@ -20,7 +20,7 @@ interface FontSizeContextType {
 const FontSizeContext = createContext<FontSizeContextType>({
   fontSize: "medium",
   setFontSize: () => {},
-  getPixelSize: () => "14px",
+  getPixelSize: () => "13px",
 })
 
 export function FontSizeProvider({ children }: { children: ReactNode }) {
@@ -39,7 +39,7 @@ export function FontSizeProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const getPixelSize = useCallback(() => {
-    return FONT_SIZES.find((s) => s.id === fontSize)?.code || "14px"
+    return FONT_SIZES.find((s) => s.id === fontSize)?.code || "13px"
   }, [fontSize])
 
   return (
