@@ -42,13 +42,10 @@ function ChecklistPageContent() {
     loadNotes()
   }, [])
 
-  async function loadNotes(retries = 3) {
-    const { data: { user } } = await supabase.auth.getUser()
+  async function loadNotes() {
+    const { data: { session } } = await supabase.auth.getSession()
+    const user = session?.user
     if (!user) {
-      if (retries > 0) {
-        await new Promise(r => setTimeout(r, 500))
-        return loadNotes(retries - 1)
-      }
       setLoading(false)
       return
     }
