@@ -111,6 +111,7 @@ export default function CodeEditor({ code, onChange, language, onLanguageChange 
           onCreateEditor={handleCreate}
           extensions={[
             lang.ext,
+            EditorView.lineWrapping,
             EditorView.theme({
               "&": {
                 fontFamily: FONT,
