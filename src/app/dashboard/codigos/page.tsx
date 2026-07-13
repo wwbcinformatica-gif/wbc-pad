@@ -122,7 +122,13 @@ export default function CodigosPage() {
           </div>
         </div>
         <div className="text-center py-10">
-          <p className="text-sm text-gray-400">Se a página não carregar, pressione <kbd className="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded text-xs font-mono">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded text-xs font-mono">F5</kbd></p>
+          <p className="text-sm text-gray-400 mb-3">Se a página não carregar:</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm rounded-lg transition-colors"
+          >
+            Clique aqui para recarregar
+          </button>
         </div>
       </div>
     )
