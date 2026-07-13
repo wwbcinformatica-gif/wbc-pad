@@ -54,7 +54,7 @@ export function CustomItemsModal({ open, onClose, onSaved }: CustomItemsModalPro
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={onClose}>
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] flex flex-col" onClick={e => e.stopPropagation()}>
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] min-h-[50vh] flex flex-col" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900">Meus Itens Personalizados</h3>
           <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-lg">

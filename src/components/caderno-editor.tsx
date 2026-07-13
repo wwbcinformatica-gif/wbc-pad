@@ -127,7 +127,7 @@ export interface CadernoEditorProps {
   onTogglePin?: () => void
   saving: boolean
   error: string
-  onSubmit: (e: React.FormEvent) => void
+  onSubmit: (e: React.FormEvent, savedContent?: string) => void
   onDelete?: () => void
   backHref: string
   pageTitle: string
@@ -138,6 +138,7 @@ export default function CadernoEditor({
   pinned, onTogglePin, saving, error, onSubmit, onDelete,
   backHref, pageTitle,
 }: CadernoEditorProps) {
+  const contentAtSave = useRef("")
   const editorRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef(content)
   const initialized = useRef(false)
@@ -256,8 +257,11 @@ export default function CadernoEditor({
 
   function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    syncToState()
-    window.requestAnimationFrame(() => onSubmit(e))
+    e.stopPropagation()
+    if (!editorRef.current) return
+    contentAtSave.current = serializeToMarkdown(editorRef.current.innerHTML)
+    setContent(contentAtSave.current)
+    onSubmit(e, contentAtSave.current)
   }
 
   function ToolBtn({ title, onClick, children }: { title: string; onClick: () => void; children: React.ReactNode }) {

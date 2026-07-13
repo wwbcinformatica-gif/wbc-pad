@@ -6,6 +6,7 @@ import Link from "next/link"
 import { createClient } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
 import { PASSWORD_CATEGORIES, type PasswordEntry } from "@/types"
+import VaultUnlock from "@/components/vault-unlock"
 import {
   Wifi,
   CreditCard,
@@ -18,6 +19,7 @@ import {
   Plus,
   AlertCircle,
   Download,
+  Lock,
 } from "lucide-react"
 
 const iconMap: Record<string, typeof Wifi> = {
@@ -143,26 +145,27 @@ export default function DashboardPage() {
         )}
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-        {PASSWORD_CATEGORIES.map((cat) => {
-          const Icon = iconMap[cat.icon] || Key
-          const count = entries.filter((e) => e.category === cat.key).length
-          return (
-            <Link key={cat.key} href={`/dashboard/passwords/${cat.key}`}>
-              <div className="bg-white rounded-2xl border border-gray-200/80 p-5 cursor-pointer h-full transition-all duration-300 btn-3d hover:border-[var(--theme-primary)]/40 hover:shadow-[0_16px_30px_-8px_rgba(19,208,208,0.15),0_8px_12px_-6px_rgba(0,0,0,0.08)]">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[var(--theme-primary)]/10 to-[var(--theme-secondary)]/10 flex items-center justify-center icon-3d">
-                    <Icon className="w-5 h-5 text-[var(--theme-primary)]" />
+      <VaultUnlock>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+          {PASSWORD_CATEGORIES.map((cat) => {
+            const Icon = iconMap[cat.icon] || Key
+            const count = entries.filter((e) => e.category === cat.key).length
+            return (
+              <Link key={cat.key} href={`/dashboard/passwords/${cat.key}`}>
+                <div className="bg-white rounded-2xl border border-gray-200/80 p-5 cursor-pointer h-full transition-all duration-300 btn-3d hover:border-[var(--theme-primary)]/40 hover:shadow-[0_16px_30px_-8px_rgba(19,208,208,0.15),0_8px_12px_-6px_rgba(0,0,0,0.08)]">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[var(--theme-primary)]/10 to-[var(--theme-secondary)]/10 flex items-center justify-center icon-3d">
+                      <Icon className="w-5 h-5 text-[var(--theme-primary)]" />
+                    </div>
+                    <span className="text-xs font-semibold text-gray-400 bg-gray-50 px-2.5 py-1 rounded-full border border-gray-100">{count}</span>
                   </div>
-                  <span className="text-xs font-semibold text-gray-400 bg-gray-50 px-2.5 py-1 rounded-full border border-gray-100">{count}</span>
+                  <h3 className="font-semibold text-gray-900 text-sm">{cat.label}</h3>
                 </div>
-                <h3 className="font-semibold text-gray-900 text-sm">{cat.label}</h3>
-                <p className="text-xs text-gray-400 mt-1">{cat.fields.length} campos</p>
-              </div>
-            </Link>
-          )
-        })}
-      </div>
+              </Link>
+            )
+          })}
+        </div>
+      </VaultUnlock>
     </div>
   )
 }

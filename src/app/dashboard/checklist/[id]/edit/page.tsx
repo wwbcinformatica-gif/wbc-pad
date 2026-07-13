@@ -13,7 +13,9 @@ function ProductInput({ value, icon, onChangeName, onChangeIcon, placeholder }: 
 }) {
   const [showIconPicker, setShowIconPicker] = useState(false)
   const [activeTab, setActiveTab] = useState("categorias")
+  const [pickerUp, setPickerUp] = useState(false)
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const iconBtnRef = useRef<HTMLButtonElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -25,6 +27,14 @@ function ProductInput({ value, icon, onChangeName, onChangeIcon, placeholder }: 
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
+
+  useEffect(() => {
+    if (showIconPicker && iconBtnRef.current) {
+      const rect = iconBtnRef.current.getBoundingClientRect()
+      const spaceBelow = window.innerHeight - rect.bottom
+      setPickerUp(spaceBelow < 320)
+    }
+  }, [showIconPicker])
 
   function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -45,6 +55,7 @@ function ProductInput({ value, icon, onChangeName, onChangeIcon, placeholder }: 
     <div ref={wrapperRef} className="relative flex-1 flex items-center gap-1">
       {/* Icon button */}
       <button
+        ref={iconBtnRef}
         type="button"
         onClick={() => setShowIconPicker(!showIconPicker)}
         className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 hover:border-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/5 transition-all flex-shrink-0 text-sm"
@@ -55,7 +66,12 @@ function ProductInput({ value, icon, onChangeName, onChangeIcon, placeholder }: 
 
       {/* Icon picker dropdown */}
       {showIconPicker && (
-        <div className="absolute z-50 left-0 top-full mt-2 bg-white rounded-xl shadow-2xl border border-gray-200 w-72 max-w-[90vw] overflow-hidden">
+        <div
+          className={`absolute z-50 left-0 bg-white rounded-xl shadow-2xl border border-gray-200 w-72 max-w-[90vw] overflow-hidden ${
+            pickerUp ? "bottom-full mb-2" : "top-full mt-2"
+          }`}
+          style={{ maxHeight: "min(60vh, 400px)" }}
+        >
           {/* Tabs */}
           <div className="flex border-b border-gray-100">
             <button
@@ -78,7 +94,7 @@ function ProductInput({ value, icon, onChangeName, onChangeIcon, placeholder }: 
             </button>
           </div>
 
-          <div className="p-2 max-h-56 overflow-y-auto">
+          <div className="p-2 overflow-y-auto" style={{ maxHeight: "calc(min(60vh, 400px) - 40px)" }}>
             {/* Categorias de emojis */}
             {activeTab === "categorias" && (
               <div className="space-y-2">

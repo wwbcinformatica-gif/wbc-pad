@@ -40,7 +40,7 @@ export default function CadernoPage() {
       .eq("type", "caderno")
       .order("pinned", { ascending: false })
       .order("updated_at", { ascending: false })
-    if (data) setItems(data as Caderno[])
+    if (data) setItems(data.filter((item: Caderno) => !(item.tags || []).includes("codigo")) as Caderno[])
     setLoading(false)
   }
 
@@ -131,12 +131,12 @@ export default function CadernoPage() {
           </Link>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 min-w-0">
           {filtered.map((item) => (
-            <div key={item.id} className="group relative">
+            <div key={item.id} className="group relative min-w-0">
               {/* Notebook card */}
               <div
-                className="relative overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300"
+                className="relative overflow-hidden w-full cursor-pointer hover:shadow-xl transition-all duration-300"
                 style={{
                   background: "linear-gradient(180deg, #fdf8e1 0%, #fef9e4 100%)",
                   border: "1px solid #e8d98a",
@@ -171,7 +171,7 @@ export default function CadernoPage() {
                   </h3>
 
                   {/* Content preview */}
-                  <div className="text-sm text-gray-600 line-clamp-4 leading-7 [&_*]:leading-7" style={{ fontFamily: "'Georgia', serif" }}>
+                  <div className="text-sm text-gray-600 line-clamp-4 leading-7 [&_*]:leading-7 break-words overflow-x-hidden min-w-0 [&_pre]:whitespace-pre-wrap [&_pre]:break-words [&_code]:break-all [&_img]:max-w-full [&_table]:block [&_table]:overflow-x-auto" style={{ fontFamily: "'Georgia', serif" }}>
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {item.content || ""}
                     </ReactMarkdown>

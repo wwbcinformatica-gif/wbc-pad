@@ -22,10 +22,14 @@ export default function EditCadernoPage() {
   useEffect(() => { loadData() }, [id])
 
   async function loadData() {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
     const { data, error } = await supabase
       .from("notes")
       .select("*")
       .eq("id", id)
+      .eq("user_id", user.id)
       .single()
 
     if (error) { setError(error.message); setLoading(false); return }
@@ -38,7 +42,7 @@ export default function EditCadernoPage() {
     setLoading(false)
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent, savedContent?: string) {
     e.preventDefault()
     if (!title.trim()) return
     setSaving(true)
@@ -46,7 +50,7 @@ export default function EditCadernoPage() {
 
     const record: Record<string, any> = {
       title: title.trim(),
-      content,
+      content: savedContent ?? content,
       pinned,
       type: "caderno",
       updated_at: new Date().toISOString(),

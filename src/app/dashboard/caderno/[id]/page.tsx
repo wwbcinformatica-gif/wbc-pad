@@ -1,10 +1,9 @@
 import { createServerSupabase } from "@/lib/supabase-server"
-import { notFound } from "next/navigation"
-import ReactMarkdown from "react-markdown"
-import remarkGfm from "remark-gfm"
+import { notFound, redirect } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft, Edit } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import MarkdownRenderer from "@/components/markdown-renderer"
 
 interface Props {
   params: Promise<{ id: string }>
@@ -13,10 +12,14 @@ interface Props {
 export default async function CadernoViewPage({ params }: Props) {
   const { id } = await params
   const supabase = await createServerSupabase()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect("/login")
+
   const { data: note } = await supabase
     .from("notes")
     .select("*")
     .eq("id", id)
+    .eq("user_id", user.id)
     .single()
 
   if (!note) return notFound()
@@ -55,13 +58,8 @@ export default async function CadernoViewPage({ params }: Props) {
         </div>
         <div className="mx-8 h-px mb-2" style={{ background: "#d4c17f88" }} />
 
-        <div
-          className="px-8 py-4 min-h-[300px] text-base text-gray-700 leading-relaxed prose prose-amber max-w-none break-words overflow-x-auto"
-          style={{ fontFamily: "'Georgia', serif" }}
-        >
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {note.content || ""}
-          </ReactMarkdown>
+        <div className="px-4 sm:px-8 py-4 min-h-[300px] text-base text-gray-700 leading-relaxed max-w-none break-words overflow-x-hidden">
+          <MarkdownRenderer content={note.content || ""} />
         </div>
       </div>
 

@@ -7,13 +7,25 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Seu caderno de senhas online e seguro",
     start_url: "/",
     display: "standalone",
-    background_color: "#ffffff",
-    theme_color: "#13D0D0",
+    orientation: "portrait",
+    background_color: "#f5f7fa",
+    theme_color: "#13d0d0",
+    display_override: ["standalone", "browser"],
     icons: [
       {
         src: "/icon.svg",
         sizes: "any",
         type: "image/svg+xml",
+      },
+      {
+        src: "/icon-192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        src: "/icon-512.png",
+        sizes: "512x512",
+        type: "image/png",
       },
     ],
   }

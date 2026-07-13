@@ -24,7 +24,7 @@ type Note = {
   type: "note" | "checklist" | "agenda"
   pinned: boolean
   color: string
-  checklist: { text: string; done: boolean }[]
+  checklist: { text: string; icon?: string; done: boolean }[]
   created_at: string
   updated_at: string
 }
@@ -217,8 +217,8 @@ function ChecklistPageContent() {
                     </div>
                   )}
                   <div className="flex items-start justify-between mb-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--theme-secondary)]/20 to-[var(--theme-secondary)]/10 flex items-center justify-center">
-                      <CheckSquare className="w-5 h-5 text-[var(--theme-secondary)]" />
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--theme-secondary)]/20 to-[var(--theme-secondary)]/10 flex items-center justify-center text-xl">
+                      {note.checklist?.find(i => i.icon)?.icon || <CheckSquare className="w-5 h-5 text-[var(--theme-secondary)]" />}
                     </div>
                     <div className="flex items-center gap-1">
                       <button onClick={(e) => { e.preventDefault(); router.push(`/dashboard/checklist/${note.id}/edit`) }} className="p-1.5 hover:bg-gray-100 rounded-lg">
@@ -271,12 +271,10 @@ function ChecklistPageContent() {
                     <ul className="mt-3 space-y-1">
                       {note.checklist.slice(0, 3).map((item, i) => (
                         <li key={i} className="flex items-center gap-2 text-xs text-gray-500">
-                          <span className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center flex-shrink-0 ${
-                            item.done ? "bg-[var(--theme-secondary)] border-[var(--theme-secondary)]" : "border-gray-300"
-                          }`}>
-                            {item.done && <span className="text-white text-[8px]">✓</span>}
+                          <span className="flex-shrink-0 w-4 text-center text-sm leading-none">
+                            {item.icon || (item.done ? "✓" : "")}
                           </span>
-                          <span className={item.done ? "line-through text-gray-400" : ""}>{item.text || "..."}</span>
+                          <span className={item.done ? "line-through text-gray-400 truncate" : "truncate"}>{item.text || "..."}</span>
                         </li>
                       ))}
                       {total > 3 && <li className="text-xs text-gray-400">+{total - 3} itens</li>}

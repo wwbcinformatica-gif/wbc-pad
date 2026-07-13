@@ -14,7 +14,7 @@ export default function NewCadernoPage() {
   const router = useRouter()
   const supabase = createClient()
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent, savedContent?: string) {
     e.preventDefault()
     if (!title.trim()) return
     setSaving(true)
@@ -26,7 +26,7 @@ export default function NewCadernoPage() {
     const record: Record<string, any> = {
       user_id: user.id,
       title: title.trim(),
-      content,
+      content: savedContent ?? content,
       type: "caderno",
       pinned: false,
       checklist: [],

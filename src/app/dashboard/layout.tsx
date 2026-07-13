@@ -19,6 +19,7 @@ import {
   Settings,
   Volume2,
   VolumeX,
+  Terminal,
 } from "lucide-react"
 import { useSound } from "@/contexts/sound-context"
 
@@ -89,6 +90,7 @@ export default function DashboardLayout({
       items: [
         { href: "/dashboard", label: "Minhas Senhas", icon: Lock },
         { href: "/dashboard/caderno", label: "Caderno", icon: BookOpen },
+        { href: "/dashboard/codigos", label: "Códigos", icon: Terminal },
         { href: "/dashboard/checklist", label: "Lista de Compras", icon: ShoppingCart },
         { href: "/dashboard/agenda", label: "Agenda", icon: Calendar },
       ],

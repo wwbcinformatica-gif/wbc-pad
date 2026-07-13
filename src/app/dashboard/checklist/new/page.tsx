@@ -17,7 +17,9 @@ function ProductInput({ value, icon, onChangeName, onChangeIcon, placeholder }: 
   const [open, setOpen] = useState(false)
   const [highlighted, setHighlighted] = useState(-1)
   const [showEmoji, setShowEmoji] = useState(false)
+  const [emojiUp, setEmojiUp] = useState(false)
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const emojiBtnRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -29,6 +31,13 @@ function ProductInput({ value, icon, onChangeName, onChangeIcon, placeholder }: 
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
+
+  useEffect(() => {
+    if (showEmoji && emojiBtnRef.current) {
+      const rect = emojiBtnRef.current.getBoundingClientRect()
+      setEmojiUp(window.innerHeight - rect.bottom < 280)
+    }
+  }, [showEmoji])
 
   function handleChange(text: string) {
     onChangeName(text)
@@ -65,6 +74,7 @@ function ProductInput({ value, icon, onChangeName, onChangeIcon, placeholder }: 
       {/* Icon button */}
       <button
         type="button"
+        ref={emojiBtnRef}
         onClick={() => { setShowEmoji(!showEmoji); setOpen(false) }}
         className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors flex-shrink-0 text-base"
         title="Escolher ícone"
@@ -74,7 +84,11 @@ function ProductInput({ value, icon, onChangeName, onChangeIcon, placeholder }: 
 
       {/* Emoji picker */}
       {showEmoji && (
-        <div className="absolute z-50 left-0 top-full mt-1 bg-white rounded-xl shadow-xl border border-gray-200 p-2 w-64 max-w-[90vw]">
+        <div
+          className={`absolute z-50 left-0 bg-white rounded-xl shadow-xl border border-gray-200 p-2 w-64 max-w-[90vw] ${
+            emojiUp ? "bottom-full mb-2" : "top-full mt-1"
+          }`}
+        >
           <p className="text-[9px] font-bold text-gray-400 uppercase mb-1.5 px-1">Ícones</p>
           <div className="flex flex-wrap gap-0.5">
             {QUICK_EMOJIS.map(emoji => (

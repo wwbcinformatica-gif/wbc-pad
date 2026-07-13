@@ -62,6 +62,30 @@ export const THEMES: Theme[] = [
     colors: { primary: "#F43F5E", secondary: "#E11D48", bg: "#fff1f2", card: "#ffffff", sidebar: "#ffffff", text: "#0d0d0f", accent: "#FB7185" },
     preview: "from-[#F43F5E] to-[#E11D48]",
   },
+  {
+    id: "lavender-mist",
+    label: "Lavender Mist",
+    colors: { primary: "#A855F7", secondary: "#7C3AED", bg: "#faf5ff", card: "#ffffff", sidebar: "#ffffff", text: "#0d0d0f", accent: "#C084FC" },
+    preview: "from-[#A855F7] to-[#7C3AED]",
+  },
+  {
+    id: "coral-reef",
+    label: "Coral Reef",
+    colors: { primary: "#FB923C", secondary: "#F97316", bg: "#fffaf5", card: "#ffffff", sidebar: "#ffffff", text: "#0d0d0f", accent: "#FDBA74" },
+    preview: "from-[#FB923C] to-[#F97316]",
+  },
+  {
+    id: "forest-pine",
+    label: "Forest Pine",
+    colors: { primary: "#22C55E", secondary: "#16A34A", bg: "#f0fdf4", card: "#ffffff", sidebar: "#ffffff", text: "#0d0d0f", accent: "#4ADE80" },
+    preview: "from-[#22C55E] to-[#16A34A]",
+  },
+  {
+    id: "slate-steel",
+    label: "Slate Steel",
+    colors: { primary: "#64748B", secondary: "#475569", bg: "#f8fafc", card: "#ffffff", sidebar: "#ffffff", text: "#0d0d0f", accent: "#94A3B8" },
+    preview: "from-[#64748B] to-[#475569]",
+  },
 ]
 
 export function applyTheme(themeId: string) {

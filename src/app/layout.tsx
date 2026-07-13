@@ -10,6 +10,17 @@ export const metadata: Metadata = {
   icons: {
     icon: "/icon.svg",
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "WBC NotePad",
+  },
+}
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 }
 
 export default function RootLayout({
@@ -33,10 +44,32 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                  navigator.serviceWorker.register('/sw.js')
+                navigator.serviceWorker.register('/sw.js').then(function(reg) {
+                  if (reg.installing) {
+                    reg.installing.addEventListener('statechange', function() {
+                      if (this.state === 'activated') {
+                        document.dispatchEvent(new CustomEvent('sw-activated'))
+                      }
+                    })
+                  } else if (reg.active) {
+                    document.dispatchEvent(new CustomEvent('sw-activated'))
+                  }
                 })
               }
+              window.__deferredPrompt = null;
+              window.addEventListener('beforeinstallprompt', function(e) {
+                e.preventDefault();
+                window.__deferredPrompt = e;
+                document.dispatchEvent(new CustomEvent('install-ready'));
+              });
+              window.__installApp = async function() {
+                var prompt = window.__deferredPrompt;
+                if (!prompt) return false;
+                prompt.prompt();
+                var result = await prompt.userChoice;
+                window.__deferredPrompt = null;
+                return result.outcome === 'accepted';
+              };
             `,
           }}
         />

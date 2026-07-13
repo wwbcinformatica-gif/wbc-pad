@@ -4,6 +4,7 @@ export type SoundId =
   | "grave" | "agudo" | "seco" | "violoncelo"
   | "piano" | "guitarra" | "tambor" | "flauta"
   | "metal" | "digital"
+  | "bubble" | "tap" | "crisp" | "thud"
 
 export const SOUND_LIST: { id: SoundId; label: string; description: string }[] = [
   { id: "grave", label: "Grave", description: "Tum profundo" },
@@ -16,6 +17,10 @@ export const SOUND_LIST: { id: SoundId; label: string; description: string }[] =
   { id: "flauta", label: "Flauta", description: "Soprado doce" },
   { id: "metal", label: "Metal", description: "Timbre metálico" },
   { id: "digital", label: "Digital", description: "Beep moderno" },
+  { id: "bubble", label: "Bolha", description: "Pop suave" },
+  { id: "tap", label: "Toque", description: "Tap leve" },
+  { id: "crisp", label: "Crisp", description: "Clique nítido" },
+  { id: "thud", label: "Thud", description: "Batida surda" },
 ]
 
 export const SOUND_PRESETS: { [key in SoundId]: { frequencies: number[]; types: OscillatorType[]; durations: number[]; gains: number[] } } = {
@@ -78,6 +83,30 @@ export const SOUND_PRESETS: { [key in SoundId]: { frequencies: number[]; types: 
     types: ["square", "square", "triangle"],
     durations: [0.06, 0.04, 0.03],
     gains: [0.5, 0.3, 0.15]
+  },
+  bubble: {
+    frequencies: [500, 700, 900],
+    types: ["sine", "triangle", "sine"],
+    durations: [0.08, 0.06, 0.05],
+    gains: [0.6, 0.4, 0.2]
+  },
+  tap: {
+    frequencies: [250, 350, 450],
+    types: ["triangle", "sine", "sine"],
+    durations: [0.04, 0.03, 0.02],
+    gains: [0.7, 0.5, 0.3]
+  },
+  crisp: {
+    frequencies: [800, 1200, 1500],
+    types: ["square", "square", "triangle"],
+    durations: [0.02, 0.015, 0.01],
+    gains: [0.9, 0.6, 0.4]
+  },
+  thud: {
+    frequencies: [60, 40, 80],
+    types: ["sine", "sine", "triangle"],
+    durations: [0.12, 0.08, 0.06],
+    gains: [1.0, 0.7, 0.5]
   }
 }
 
@@ -142,6 +171,30 @@ export const BUTTON_SOUNDS: { [key in SoundId]: { frequencies: number[]; types: 
     types: ["square", "square", "triangle"],
     durations: [0.04, 0.03, 0.02],
     gains: [0.6, 0.4, 0.2]
+  },
+  bubble: {
+    frequencies: [400, 600, 800],
+    types: ["sine", "triangle", "sine"],
+    durations: [0.05, 0.04, 0.03],
+    gains: [0.7, 0.5, 0.3]
+  },
+  tap: {
+    frequencies: [200, 300, 400],
+    types: ["triangle", "sine", "sine"],
+    durations: [0.03, 0.02, 0.015],
+    gains: [0.8, 0.5, 0.3]
+  },
+  crisp: {
+    frequencies: [600, 900, 1200],
+    types: ["square", "square", "triangle"],
+    durations: [0.015, 0.01, 0.008],
+    gains: [1.0, 0.7, 0.5]
+  },
+  thud: {
+    frequencies: [50, 30, 60],
+    types: ["sine", "sine", "triangle"],
+    durations: [0.08, 0.06, 0.04],
+    gains: [1.0, 0.8, 0.5]
   }
 }
 

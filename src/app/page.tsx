@@ -21,6 +21,7 @@ import {
   ArrowRight,
 } from "lucide-react"
 import Link from "next/link"
+import { createClient } from "@/lib/supabase"
 
 const iconMap: Record<string, typeof Wifi> = {
   wifi: Wifi,
@@ -40,6 +41,10 @@ export default function LandingPage() {
     import("@/lib/app-config").then(({ getAppConfig }) =>
       getAppConfig().then((cfg) => setTrialDays(cfg.trial_days))
     )
+    const supabase = createClient()
+    supabase.auth.getUser().then((res: any) => {
+      if (res.data?.user) window.location.href = "/dashboard"
+    })
   }, [])
   return (
     <>
