@@ -65,10 +65,9 @@ interface CodeEditorProps {
   onChange: (val: string) => void
   language: string
   onLanguageChange: (val: string) => void
-  minHeight?: string
 }
 
-export default function CodeEditor({ code, onChange, language, onLanguageChange, minHeight = "320px" }: CodeEditorProps) {
+export default function CodeEditor({ code, onChange, language, onLanguageChange }: CodeEditorProps) {
   const { theme, toggle } = useCodeTheme()
   const [cm, setCm] = useState<any>(null)
 
@@ -84,9 +83,9 @@ export default function CodeEditor({ code, onChange, language, onLanguageChange,
   }, [])
 
   return (
-    <div className={`rounded-xl overflow-hidden border shadow-sm ${isDark ? "border-[#3c3c3c]" : "border-gray-200"}`}>
+    <div className={`flex flex-col rounded-xl overflow-hidden border shadow-sm h-full ${isDark ? "border-[#3c3c3c]" : "border-gray-200"}`}>
       {/* Header bar */}
-      <div className={`flex items-center px-4 py-1.5 select-none ${
+      <div className={`shrink-0 flex items-center px-4 py-1.5 select-none ${
         isDark ? "bg-[#252526] border-b border-[#3c3c3c]" : "bg-gray-100 border-b border-gray-200"
       }`}>
         <select
@@ -96,70 +95,53 @@ export default function CodeEditor({ code, onChange, language, onLanguageChange,
             isDark ? "bg-[#3c3c3c] text-[#d4d4d4]" : "bg-white text-gray-700 border border-gray-200"
           }`}
         >
-          <option value="javascript">JavaScript</option>
-          <option value="typescript">TypeScript</option>
-          <option value="tsx">TSX</option>
-          <option value="jsx">JSX</option>
-          <option value="html">HTML</option>
-          <option value="css">CSS</option>
-          <option value="python">Python</option>
-          <option value="java">Java</option>
-          <option value="csharp">C#</option>
-          <option value="cpp">C++</option>
-          <option value="go">Go</option>
-          <option value="rust">Rust</option>
-          <option value="sql">SQL</option>
-          <option value="bash">Bash</option>
-          <option value="json">JSON</option>
-          <option value="yaml">YAML</option>
-          <option value="markdown">Markdown</option>
-          <option value="xml">XML</option>
-          <option value="text">Texto puro</option>
+          {LANGUAGES.map((l) => (
+            <option key={l.value} value={l.value}>{l.label}</option>
+          ))}
         </select>
       </div>
 
       {/* CodeMirror Editor */}
-      <CodeMirror
-        value={code}
-        onChange={handleChange}
-        onCreateEditor={handleCreate}
-        extensions={[
-          lang.ext,
-          EditorView.lineWrapping,
-          EditorView.theme({
-            "&": {
-              fontFamily: FONT,
-              fontSize: "13px",
-              lineHeight: "22px",
-              minHeight,
-            },
-            ".cm-scroller": { fontFamily: FONT, overflowX: "hidden" },
-            ".cm-content": { fontFamily: FONT, padding: "12px 0" },
-            ".cm-line": { padding: "0 16px" },
-            ".cm-gutters": { fontFamily: FONT, fontSize: "12px" },
-            ".cm-activeLine": isDark ? { backgroundColor: "#0a0a0a" } : {},
-            ...(isDark ? {
-              "&": { backgroundColor: "#000" },
-              ".cm-gutters": { backgroundColor: "#000", color: "#555" },
-              ".cm-activeLineGutter": { backgroundColor: "#0a0a0a" },
-            } : {}),
-          }),
-        ]}
-        theme={isDark ? oneDark : lightTheme}
-        basicSetup={{
-          lineNumbers: true,
-          highlightActiveLineGutter: true,
-          highlightActiveLine: true,
-          foldGutter: false,
-          bracketMatching: true,
-          closeBrackets: true,
-          autocompletion: false,
-          indentOnInput: true,
-          tabSize: 2,
-        }}
-        height={minHeight === "100%" ? undefined : `${minHeight}`}
-        className={`text-left ${minHeight === "100%" ? "h-full" : ""}`}
-      />
+      <div className="flex-1 min-h-0 overflow-auto">
+        <CodeMirror
+          value={code}
+          onChange={handleChange}
+          onCreateEditor={handleCreate}
+          extensions={[
+            lang.ext,
+            EditorView.theme({
+              "&": {
+                fontFamily: FONT,
+                fontSize: "13px",
+                lineHeight: "22px",
+              },
+              ".cm-scroller": { fontFamily: FONT, overflow: "auto" },
+              ".cm-content": { fontFamily: FONT, padding: "12px 0" },
+              ".cm-line": { padding: "0 16px" },
+              ".cm-gutters": { fontFamily: FONT, fontSize: "12px" },
+              ".cm-activeLine": isDark ? { backgroundColor: "#0a0a0a" } : {},
+              ...(isDark ? {
+                "&": { backgroundColor: "#000" },
+                ".cm-gutters": { backgroundColor: "#000", color: "#555" },
+                ".cm-activeLineGutter": { backgroundColor: "#0a0a0a" },
+              } : {}),
+            }),
+          ]}
+          theme={isDark ? oneDark : lightTheme}
+          basicSetup={{
+            lineNumbers: true,
+            highlightActiveLineGutter: true,
+            highlightActiveLine: true,
+            foldGutter: false,
+            bracketMatching: true,
+            closeBrackets: true,
+            autocompletion: false,
+            indentOnInput: true,
+            tabSize: 2,
+          }}
+          className="text-left [&_.cm-editor]:h-auto [&_.cm-editor]:min-h-full"
+        />
+      </div>
     </div>
   )
 }

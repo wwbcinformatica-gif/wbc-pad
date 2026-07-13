@@ -69,7 +69,7 @@ export default function CodigoViewPage({ params }: Props) {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-full overflow-hidden">
       <div className="shrink-0 pb-4">
         <div className="flex items-center justify-between">
           <Link href="/dashboard/codigos">
@@ -90,7 +90,7 @@ export default function CodigoViewPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden space-y-4">
+      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
         <div className={`rounded-xl border overflow-hidden ${isDark ? "bg-[#000] border-[#2a2a2a]" : "bg-white border-gray-200"}`}>
           <div className={`flex items-center gap-3 px-6 py-4 border-b ${isDark ? "border-[#2a2a2a]" : "border-gray-100"}`}>
             <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${isDark ? "bg-[#1a1a1a]" : "bg-indigo-100"}`}>
@@ -105,8 +105,6 @@ export default function CodigoViewPage({ params }: Props) {
             <MarkdownRenderer content={note.content || ""} />
           </div>
         </div>
-
-
       </div>
     </div>
   )

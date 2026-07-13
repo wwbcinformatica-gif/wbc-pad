@@ -107,7 +107,7 @@ export default function EditCodigoPage({ params }: { params: Promise<{ id: strin
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto">
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
         <form onSubmit={handleSubmit} className="flex flex-col h-full">
           <div className="shrink-0 flex gap-2 mb-3">
             <input
@@ -130,7 +130,6 @@ export default function EditCodigoPage({ params }: { params: Promise<{ id: strin
               onChange={setCode}
               language={language}
               onLanguageChange={setLanguage}
-              minHeight="100%"
             />
           </div>
 
