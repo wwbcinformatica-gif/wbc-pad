@@ -26,13 +26,20 @@ export default function CadernoPage() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
   const router = useRouter()
-  const supabase = createClient()
 
   useEffect(() => { load() }, [])
 
-  async function load() {
+  async function load(retries = 3) {
+    const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
+    if (!user) {
+      if (retries > 0) {
+        await new Promise(r => setTimeout(r, 500))
+        return load(retries - 1)
+      }
+      setLoading(false)
+      return
+    }
     const { data } = await supabase
       .from("notes")
       .select("*")

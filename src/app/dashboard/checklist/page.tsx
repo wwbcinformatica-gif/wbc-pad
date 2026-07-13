@@ -36,15 +36,22 @@ function ChecklistPageContent() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingTitle, setEditingTitle] = useState("")
   const router = useRouter()
-  const supabase = createClient()
 
   useEffect(() => {
     loadNotes()
   }, [])
 
-  async function loadNotes() {
+  async function loadNotes(retries = 3) {
+    const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
+    if (!user) {
+      if (retries > 0) {
+        await new Promise(r => setTimeout(r, 500))
+        return loadNotes(retries - 1)
+      }
+      setLoading(false)
+      return
+    }
     const { data } = await supabase
       .from("notes").select("*").eq("user_id", user.id)
       .order("pinned", { ascending: false }).order("updated_at", { ascending: false })

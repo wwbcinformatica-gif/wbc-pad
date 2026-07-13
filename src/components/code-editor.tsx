@@ -15,6 +15,7 @@ import { cpp } from "@codemirror/lang-cpp"
 import { oneDark } from "@codemirror/theme-one-dark"
 import { EditorView } from "@codemirror/view"
 import { useCodeTheme } from "@/contexts/code-theme-context"
+import { useFontSize } from "@/contexts/font-size-context"
 import { useState } from "react"
 
 const LANGUAGES = [
@@ -69,6 +70,7 @@ interface CodeEditorProps {
 
 export default function CodeEditor({ code, onChange, language, onLanguageChange }: CodeEditorProps) {
   const { theme, toggle } = useCodeTheme()
+  const { getPixelSize } = useFontSize()
   const [cm, setCm] = useState<any>(null)
 
   const isDark = theme === "dark"
@@ -112,8 +114,8 @@ export default function CodeEditor({ code, onChange, language, onLanguageChange 
             EditorView.theme({
               "&": {
                 fontFamily: FONT,
-                fontSize: "13px",
-                lineHeight: "22px",
+                fontSize: getPixelSize(),
+                lineHeight: "1.6",
               },
               ".cm-scroller": { fontFamily: FONT, overflow: "auto" },
               ".cm-content": { fontFamily: FONT, padding: "12px 0" },

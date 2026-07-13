@@ -6,12 +6,15 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { oneDark, oneLight } from "react-syntax-highlighter/dist/esm/styles/prism"
 import type { Components } from "react-markdown"
 import { useCodeTheme } from "@/contexts/code-theme-context"
+import { useFontSize } from "@/contexts/font-size-context"
 
 const FONT = "'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', 'Courier New', monospace"
 
 export default function MarkdownRenderer({ content, className = "" }: { content: string; className?: string }) {
   const { theme } = useCodeTheme()
+  const { getPixelSize } = useFontSize()
   const isDark = theme === "dark"
+  const fontSize = getPixelSize()
 
   const components: Partial<Components> = {
     code({ className: cl, children, ...props }) {
@@ -50,9 +53,9 @@ export default function MarkdownRenderer({ content, className = "" }: { content:
               customStyle={{
                 margin: 0,
                 borderRadius: 0,
-                fontSize: "0.8125rem",
+                fontSize,
                 fontFamily: FONT,
-                lineHeight: "22px",
+                lineHeight: "1.6",
               }}
               codeTagProps={{ style: { fontFamily: FONT } }}
             >
