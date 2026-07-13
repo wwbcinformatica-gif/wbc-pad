@@ -121,6 +121,9 @@ export default function CodigosPage() {
             <p className="text-sm text-gray-500">Carregando...</p>
           </div>
         </div>
+        <div className="text-center py-10">
+          <p className="text-sm text-gray-400">Se a página não carregar, pressione <kbd className="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded text-xs font-mono">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded text-xs font-mono">F5</kbd></p>
+        </div>
       </div>
     )
   }
