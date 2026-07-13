@@ -40,6 +40,7 @@ export default function DashboardLayout({
   useEffect(() => {
     const search = typeof window !== "undefined" ? window.location.search : ""
     setActiveHref(pathname + search)
+    router.refresh()
   }, [pathname])
 
   useEffect(() => {
