@@ -13,7 +13,6 @@ export default function NewCodigoPage() {
   const [language, setLanguage] = useState("javascript")
   const [code, setCode] = useState("")
   const [description, setDescription] = useState("")
-  const [tagsText, setTagsText] = useState("")
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
   const router = useRouter()
@@ -28,10 +27,7 @@ export default function NewCodigoPage() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { setError("Não autenticado"); setSaving(false); return }
 
-    const tags = tagsText.split(",").map((t) => t.trim()).filter(Boolean)
-    const allTags = ["codigo"]
-    if (language) allTags.push(language)
-    allTags.push(...tags)
+    const allTags = [...new Set(["codigo", language].filter(Boolean))]
 
     const content = description
       ? `${description}\n\n\`\`\`${language}\n${code}\n\`\`\``
@@ -137,16 +133,6 @@ export default function NewCodigoPage() {
               onChange={setCode}
               language={language}
               onLanguageChange={setLanguage}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Tags (separadas por vírgula)</label>
-            <input
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200"
-              placeholder="api, database, util..."
-              value={tagsText}
-              onChange={(e) => setTagsText(e.target.value)}
             />
           </div>
 

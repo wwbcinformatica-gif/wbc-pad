@@ -25,7 +25,6 @@ export default function EditCodigoPage({ params }: { params: Promise<{ id: strin
   const [language, setLanguage] = useState("javascript")
   const [code, setCode] = useState("")
   const [description, setDescription] = useState("")
-  const [tagsText, setTagsText] = useState("")
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
@@ -53,8 +52,6 @@ export default function EditCodigoPage({ params }: { params: Promise<{ id: strin
     setDescription(parts.description)
     setLanguage(parts.language)
     setCode(parts.code)
-    const allTags: string[] = Array.isArray(data.tags) ? data.tags : []
-    setTagsText(allTags.join(", "))
     setLoading(false)
   }
 
@@ -67,10 +64,7 @@ export default function EditCodigoPage({ params }: { params: Promise<{ id: strin
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { setError("Não autenticado"); setSaving(false); return }
 
-    const newTags = tagsText.split(",").map((t) => t.trim()).filter(Boolean)
-    const allTags = ["codigo"]
-    if (language) allTags.push(language)
-    allTags.push(...newTags)
+    const allTags = [...new Set(["codigo", language].filter(Boolean))]
 
     const content = description
       ? `${description}\n\n\`\`\`${language}\n${code}\n\`\`\``
@@ -171,15 +165,6 @@ export default function EditCodigoPage({ params }: { params: Promise<{ id: strin
               onChange={setCode}
               language={language}
               onLanguageChange={setLanguage}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Tags (separadas por vírgula)</label>
-            <input
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200"
-              value={tagsText}
-              onChange={(e) => setTagsText(e.target.value)}
             />
           </div>
 

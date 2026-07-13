@@ -195,7 +195,7 @@ export default function DashboardLayout({
           />
         )}
 
-        <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-auto max-w-7xl mx-auto w-full">
+        <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-hidden max-w-7xl mx-auto w-full">
           {children}
         </main>
       </div>
