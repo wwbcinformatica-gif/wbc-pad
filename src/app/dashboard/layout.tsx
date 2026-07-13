@@ -156,11 +156,20 @@ export default function DashboardLayout({
                   {section.items.map((item) => {
                     const Icon = item.icon
                     const isActive = item.href === activeHref
+                    const isCodigos = item.href === "/dashboard/codigos"
                     return (
                       <Link
                         key={item.href}
                         href={item.href}
-                        onClick={() => { if (navSound) play(); setActiveHref(item.href); setSidebarOpen(false) }}
+                        onClick={(e) => {
+                          if (navSound) play()
+                          setActiveHref(item.href)
+                          setSidebarOpen(false)
+                          if (isCodigos) {
+                            e.preventDefault()
+                            window.location.href = item.href
+                          }
+                        }}
                         className={`nav-item-3d flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                           isActive
                             ? "active bg-gradient-to-r from-[var(--theme-primary)]/15 to-[var(--theme-secondary)]/15 text-[var(--theme-primary)] glass-strong"

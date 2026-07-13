@@ -112,7 +112,7 @@ export default function CodigosPage() {
   if (loading) {
     return (
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center gap-4 mb-8">
+        <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-indigo-100 border border-indigo-200">
             <Terminal className="w-6 h-6 text-indigo-600" />
           </div>
@@ -120,15 +120,6 @@ export default function CodigosPage() {
             <h1 className="text-2xl font-bold text-gray-900">Códigos</h1>
             <p className="text-sm text-gray-500">Carregando...</p>
           </div>
-        </div>
-        <div className="text-center py-10">
-          <p className="text-sm text-gray-400 mb-3">Se a página não carregar:</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm rounded-lg transition-colors"
-          >
-            Clique aqui para recarregar
-          </button>
         </div>
       </div>
     )
