@@ -1,20 +1,21 @@
 let vaultKey: CryptoKey | null = null
-let initPromise: Promise<void> | null = null
+let initDone = false
 
 async function initFromStorage() {
-  const stored = typeof window !== "undefined" ? sessionStorage.getItem("vault_key") : null
+  if (initDone) return
+  initDone = true
+  const stored = typeof window !== "undefined" ? localStorage.getItem("vault_key") : null
   if (!stored) return
   try {
     const raw = Uint8Array.from(atob(stored), (c) => c.charCodeAt(0))
     vaultKey = await crypto.subtle.importKey("raw", raw, { name: "AES-GCM" }, false, ["encrypt", "decrypt"])
   } catch {
-    sessionStorage.removeItem("vault_key")
+    localStorage.removeItem("vault_key")
   }
 }
 
 export async function ensureInitialized(): Promise<void> {
-  if (!initPromise) initPromise = initFromStorage()
-  return initPromise
+  return initFromStorage()
 }
 
 export function isVaultUnlocked(): boolean {
@@ -29,8 +30,12 @@ export async function unlockVault(key: CryptoKey): Promise<void> {
   vaultKey = key
   try {
     const raw = await crypto.subtle.exportKey("raw", key)
-    const base64 = btoa(String.fromCharCode(...new Uint8Array(raw)))
-    sessionStorage.setItem("vault_key", base64)
+    const bytes = new Uint8Array(raw)
+    let binary = ""
+    for (let i = 0; i < bytes.length; i++) {
+      binary += String.fromCharCode(bytes[i])
+    }
+    localStorage.setItem("vault_key", btoa(binary))
   } catch {
     // fallback: keep in memory only
   }
@@ -38,7 +43,7 @@ export async function unlockVault(key: CryptoKey): Promise<void> {
 
 export function lockVault(): void {
   vaultKey = null
-  sessionStorage.removeItem("vault_key")
+  localStorage.removeItem("vault_key")
 }
 
 // Auto-init when imported

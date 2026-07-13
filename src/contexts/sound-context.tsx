@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react"
 import { playSound, playPreviewSound, type SoundId } from "@/lib/sounds"
-import { getSupabase, getSupabaseDirect } from "@/lib/supabase"
+import { createClient } from "@/lib/supabase"
 
 interface SoundContextType {
   enabled: boolean
@@ -54,7 +54,7 @@ export function SoundProvider({ children }: { children: ReactNode }) {
 
   const saveToDatabase = useCallback(async (userId: string): Promise<void> => {
     try {
-      const supabase = getSupabaseDirect()
+      const supabase = createClient()
       if (!supabase) {
         throw new Error('Supabase client not available')
       }
@@ -87,7 +87,7 @@ export function SoundProvider({ children }: { children: ReactNode }) {
 
   const loadFromDatabase = useCallback(async (userId: string) => {
     try {
-      const supabase = getSupabase()
+      const supabase = createClient()
       if (!supabase) return
       
       const { data, error } = await supabase

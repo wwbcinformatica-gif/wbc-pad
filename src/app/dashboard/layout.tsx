@@ -108,8 +108,8 @@ export default function DashboardLayout({
   ]
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#f5f7fa]">
-      <header className="sticky top-0 z-50 glass-strong border-b border-white/20">
+    <div className="h-screen flex flex-col bg-[#f5f7fa] overflow-hidden">
+      <header className="shrink-0 z-50 glass-strong border-b border-white/20">
         <div className="flex items-center justify-between px-4 lg:px-6 h-16">
           <div className="flex items-center gap-3">
             <button
@@ -142,9 +142,9 @@ export default function DashboardLayout({
         </div>
       </header>
 
-      <div className="flex flex-1 relative">
+      <div className="flex flex-1 min-h-0 relative">
         <aside
-          className={`${sidebarOpen ? "translate-x-0 pointer-events-auto" : "-translate-x-full pointer-events-none"} lg:translate-x-0 lg:pointer-events-auto fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200/80 pt-16 lg:pt-0 transition-transform duration-300 ease-in-out`}
+          className={`${sidebarOpen ? "translate-x-0 pointer-events-auto" : "-translate-x-full pointer-events-none"} lg:translate-x-0 lg:pointer-events-auto fixed lg:sticky lg:top-16 inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200/80 pt-16 lg:pt-0 transition-transform duration-300 ease-in-out shrink-0 lg:h-[calc(100vh-4rem)] lg:overflow-y-auto`}
         >
           <div className="p-5 space-y-6 mt-4">
             {navSections.map((section) => (
@@ -195,7 +195,7 @@ export default function DashboardLayout({
           />
         )}
 
-        <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-auto max-w-7xl mx-auto w-full">
+        <main className="flex-1 min-h-0 p-4 md:p-6 lg:p-8 overflow-y-auto max-w-7xl mx-auto w-full">
           {children}
         </main>
       </div>
