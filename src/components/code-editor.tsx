@@ -15,7 +15,6 @@ import { cpp } from "@codemirror/lang-cpp"
 import { oneDark } from "@codemirror/theme-one-dark"
 import { EditorView } from "@codemirror/view"
 import { useCodeTheme } from "@/contexts/code-theme-context"
-import { Sun, Moon } from "lucide-react"
 import { useState } from "react"
 
 const LANGUAGES = [
@@ -86,19 +85,37 @@ export default function CodeEditor({ code, onChange, language, onLanguageChange,
 
   return (
     <div className={`rounded-xl overflow-hidden border shadow-sm ${isDark ? "border-[#3c3c3c]" : "border-gray-200"}`}>
-      {/* Toggle tema */}
-      <div className={`flex items-center justify-end px-4 py-1.5 select-none ${
+      {/* Header bar */}
+      <div className={`flex items-center px-4 py-1.5 select-none ${
         isDark ? "bg-[#252526] border-b border-[#3c3c3c]" : "bg-gray-100 border-b border-gray-200"
       }`}>
-        <button
-          onClick={toggle}
-          className={`p-1 rounded transition-colors ${
-            isDark ? "text-[#858585] hover:text-[#cccccc] hover:bg-[#2a2d2e]" : "text-gray-400 hover:text-gray-600 hover:bg-gray-200"
+        <select
+          value={language}
+          onChange={(e) => onLanguageChange(e.target.value)}
+          className={`text-xs px-2 py-1 rounded border-0 focus:outline-none focus:ring-1 focus:ring-[var(--theme-primary)] cursor-pointer ${
+            isDark ? "bg-[#3c3c3c] text-[#d4d4d4]" : "bg-white text-gray-700 border border-gray-200"
           }`}
-          title={isDark ? "Tema claro" : "Tema escuro"}
         >
-          {isDark ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
-        </button>
+          <option value="javascript">JavaScript</option>
+          <option value="typescript">TypeScript</option>
+          <option value="tsx">TSX</option>
+          <option value="jsx">JSX</option>
+          <option value="html">HTML</option>
+          <option value="css">CSS</option>
+          <option value="python">Python</option>
+          <option value="java">Java</option>
+          <option value="csharp">C#</option>
+          <option value="cpp">C++</option>
+          <option value="go">Go</option>
+          <option value="rust">Rust</option>
+          <option value="sql">SQL</option>
+          <option value="bash">Bash</option>
+          <option value="json">JSON</option>
+          <option value="yaml">YAML</option>
+          <option value="markdown">Markdown</option>
+          <option value="xml">XML</option>
+          <option value="text">Texto puro</option>
+        </select>
       </div>
 
       {/* CodeMirror Editor */}
@@ -140,8 +157,8 @@ export default function CodeEditor({ code, onChange, language, onLanguageChange,
           indentOnInput: true,
           tabSize: 2,
         }}
-        height={`${minHeight}`}
-        className="text-left"
+        height={minHeight === "100%" ? undefined : `${minHeight}`}
+        className={`text-left ${minHeight === "100%" ? "h-full" : ""}`}
       />
     </div>
   )

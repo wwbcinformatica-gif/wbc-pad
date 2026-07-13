@@ -92,8 +92,8 @@ export default function EditCodigoPage({ params }: { params: Promise<{ id: strin
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="shrink-0 pb-4">
+    <div className="flex flex-col h-full">
+      <div className="shrink-0 pb-3">
         <div className="flex items-center gap-4">
           <Link href={`/dashboard/codigos/${id}`}>
             <Button variant="ghost" size="sm">
@@ -107,72 +107,41 @@ export default function EditCodigoPage({ params }: { params: Promise<{ id: strin
         </div>
       </div>
 
-      <div className="flex-1">
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="flex gap-3 flex-col sm:flex-row">
-      <div className="min-h-0 flex-1 overflow-y-auto">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Título</label>
-              <input
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Descrição (opcional, aceita markdown)</label>
-            <textarea
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 resize-none"
-              rows={2}
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        <form onSubmit={handleSubmit} className="flex flex-col h-full">
+          <div className="shrink-0 flex gap-2 mb-3">
+            <input
+              className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Título"
+            />
+            <input
+              className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              placeholder="Descrição (opcional)"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Linguagem</label>
-            <select
-              value={language}
-              onChange={(e) => setLanguage(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 bg-white"
-            >
-              <option value="javascript">JavaScript</option>
-              <option value="typescript">TypeScript</option>
-              <option value="tsx">TSX</option>
-              <option value="jsx">JSX</option>
-              <option value="html">HTML</option>
-              <option value="css">CSS</option>
-              <option value="python">Python</option>
-              <option value="java">Java</option>
-              <option value="csharp">C#</option>
-              <option value="cpp">C++</option>
-              <option value="go">Go</option>
-              <option value="rust">Rust</option>
-              <option value="sql">SQL</option>
-              <option value="bash">Bash</option>
-              <option value="json">JSON</option>
-              <option value="yaml">YAML</option>
-              <option value="markdown">Markdown</option>
-              <option value="xml">XML</option>
-              <option value="text">Texto puro</option>
-            </select>
-          </div>
-
-          <div>
+          <div className="flex-1 min-h-0 flex flex-col">
             <CodeEditor
               code={code}
               onChange={setCode}
               language={language}
               onLanguageChange={setLanguage}
+              minHeight="100%"
             />
           </div>
 
-          {error && <p className="text-sm text-red-500">{error}</p>}
-
-          <Button type="submit" disabled={saving || !title.trim()} className="bg-indigo-500 hover:bg-indigo-600 text-white">
-            {saving ? "Salvando..." : <><Save className="w-4 h-4 mr-1" /> Salvar</>}
-          </Button>
+          <div className="shrink-0 flex items-center gap-3 pt-3">
+            {error && <p className="text-sm text-red-500">{error}</p>}
+            <div className="ml-auto">
+              <Button type="submit" disabled={saving || !title.trim()} className="bg-indigo-500 hover:bg-indigo-600 text-white">
+                {saving ? "Salvando..." : <><Save className="w-4 h-4 mr-1" /> Salvar</>}
+              </Button>
+            </div>
+          </div>
         </form>
       </div>
     </div>
