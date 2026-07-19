@@ -190,7 +190,6 @@ export default function CadernoEditor({
   }, [syncToState])
 
   function execCmd(cmd: string, value?: string) {
-    if (editorRef.current) editorRef.current.focus()
     document.execCommand(cmd, false, value)
     setTimeout(syncToState, 0)
   }

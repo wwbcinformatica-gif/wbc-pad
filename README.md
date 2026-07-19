@@ -17,14 +17,18 @@ Transforme o caderno de senhas físico em um app online com assinatura.
 - 8 categorias de senha: Wi-Fi, Cartão, Sites, Documentos, Contas, Email, SSH, Outros
 - CRUD completo de senhas
 - Copiar/mostrar/esconder senhas
-- Caderno de anotações com editor rich text
-- Códigos com syntax highlighting
-- Lista de compras com emojis e categorias
-- Período de teste grátis (7 dias)
+- Caderno de anotações com editor rich text (negrito, itálico, riscado, checkbox)
+- Códigos com syntax highlighting (múltiplas linguagens)
+- Lista de compras com emojis, categorias e upload de ícones
+- Agenda com compromissos, horários e lembretes
+- Período de teste grátis configurável (admin)
 - Assinatura mensal via Mercado Pago
-- Painel admin (gerenciar usuários)
-- Backup e exportação de dados
-- PWA (instalável como app)
+- Painel admin (gerenciar usuários, configurar trial, planos personalizados)
+- Cofre com criptografia AES-GCM (proteção extra para senhas)
+- Backup e exportação de dados (JSON e TXT)
+- PWA instalável como app no celular
+- Temas visuais (claro/escuro para editor de código)
+- Sistema de som personalizável (10 tipos de som)
 - Design responsivo
 
 ## Setup
@@ -113,6 +117,7 @@ src/
 │   │   ├── subscription/     # Gerenciar assinatura
 │   │   └── backup/           # Backup dos dados
 │   └── api/
+│       ├── config/                # Configurações globais (trial)
 │       ├── webhooks/mercadopago/  # Webhook MP
 │       └── mercadopago/           # API Mercado Pago
 ├── components/

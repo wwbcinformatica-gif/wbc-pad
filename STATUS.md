@@ -94,3 +94,28 @@ Todas as solicitações foram implementadas com sucesso:
 - ✅ Deploy realizado em produção
 
 **Projeto está pronto para uso com todas as melhorias solicitadas!**
+
+---
+
+## 🛠️ FIXES 19/07/2026 (Tarde)
+
+### 1. Listas vazias após navegação (Códigos, Caderno, Agenda, etc.)
+- [x] **Problema:** Após criar/editar um item, a lista aparecia vazia. Era necessário CTRL+F5 para ver os dados.
+- [x] **Causa raiz:** As páginas de listagem usavam `getSession()` que lê o token do cache local. Navegação cliente (`router.push`) não invalidava esse cache.
+- [x] **Correção:** Substituído `getSession()` por `getUser()` em 5 páginas: dashboard, caderno, códigos, checklist, agenda. `getUser()` faz requisição HTTP validando o token.
+- **Arquivos:** `src/app/dashboard/{page,caderno,codigos,checklist,agenda}/page.tsx`
+
+### 2. Toolbar do editor do caderno não funcionava
+- [x] **Problema:** Botões de negrito, itálico, checkbox, desfazer/refazer não aplicavam formatação.
+- [x] **Causa raiz:** `execCmd()` chamava `editorRef.current.focus()` que limpava a seleção do texto antes de aplicar o comando.
+- [x] **Correção:** Removido o `focus()` do `execCmd()`. O `onMouseDown` dos botões já preserva o foco do editor.
+- **Arquivo:** `src/components/caderno-editor.tsx`
+
+### 3. Configuração de Trial não persistia
+- [x] **Problema:** Landing page sempre mostrava "7 dias grátis" mesmo após admin configurar outro valor.
+- [x] **Causa raiz:** Config armazenada como nota no Supabase com RLS que bloqueava leitura de não-autenticados e atualização por admins diferentes.
+- [x] **Correção:** Criada API route `/api/config` que usa o admin client (service role) para ler/escrever a config, bypassando RLS. `app-config.ts` agora chama a API via fetch.
+- **Arquivos:** `src/app/api/config/route.ts`, `src/lib/app-config.ts`
+
+### 4. Estabilidade de autenticação
+- [x] Padronizado uso de `getUser()` em todas as páginas (CRUD e listagens) para garantir sessão sempre válida.

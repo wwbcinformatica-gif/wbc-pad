@@ -50,8 +50,7 @@ export default function DashboardPage() {
   }, [])
 
   async function loadData() {
-    const { data: { session } } = await supabase.auth.getSession()
-    const user = session?.user
+    const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
       router.push("/login")
       return
