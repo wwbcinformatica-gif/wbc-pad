@@ -12,14 +12,16 @@ export async function GET() {
     .eq("type", "note")
     .single()
 
+  const headers = { "Cache-Control": "no-cache, no-store, must-revalidate" }
+
   if (data?.content) {
     try {
-      return NextResponse.json(JSON.parse(data.content))
+      return NextResponse.json(JSON.parse(data.content), { headers })
     } catch {
-      return NextResponse.json({ trial_days: 7 })
+      return NextResponse.json({ trial_days: 7 }, { headers })
     }
   }
-  return NextResponse.json({ trial_days: 7 })
+  return NextResponse.json({ trial_days: 7 }, { headers })
 }
 
 export async function POST(request: Request) {

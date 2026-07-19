@@ -47,7 +47,7 @@ export default function DashboardPage() {
       loadData()
     })
     return () => subscription.unsubscribe()
-  }, [])
+  }, [pathname])
 
   async function loadData() {
     const { data: { user } } = await supabase.auth.getUser()

@@ -45,7 +45,7 @@ function ChecklistPageContent() {
       loadNotes()
     })
     return () => subscription.unsubscribe()
-  }, [])
+  }, [pathname])
 
   async function loadNotes() {
     const { data: { user } } = await supabase.auth.getUser()

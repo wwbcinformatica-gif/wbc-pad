@@ -22,6 +22,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase"
+import { getAppConfig } from "@/lib/app-config"
 
 const iconMap: Record<string, typeof Wifi> = {
   wifi: Wifi,
@@ -38,9 +39,7 @@ export default function LandingPage() {
   const [trialDays, setTrialDays] = useState(7)
 
   useEffect(() => {
-    import("@/lib/app-config").then(({ getAppConfig }) =>
-      getAppConfig().then((cfg) => setTrialDays(cfg.trial_days))
-    )
+    getAppConfig().then((cfg) => setTrialDays(cfg.trial_days))
     const supabase = createClient()
     supabase.auth.getUser().then((res: any) => {
       if (res.data?.user) window.location.href = "/dashboard"
