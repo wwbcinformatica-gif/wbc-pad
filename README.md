@@ -95,6 +95,7 @@ src/
 │   ├── page.tsx              # Landing page
 │   ├── layout.tsx            # Layout global
 │   ├── manifest.ts           # PWA manifest
+│   ├── proxy.ts              # Proxy (middleware) para auth
 │   ├── login/                # Login
 │   ├── register/             # Cadastro
 │   ├── forgot-password/      # Recuperar senha
@@ -104,7 +105,7 @@ src/
 │   │   ├── layout.tsx        # Layout do dashboard
 │   │   ├── passwords/
 │   │   │   └── [category]/
-│   │   │       ├── page.tsx      # Listar registros
+│   │   │       ├── page.tsx      # Listar registros (com VaultUnlock)
 │   │   │       ├── new/page.tsx  # Novo registro
 │   │   │       └── [id]/edit/    # Editar registro
 │   │   ├── caderno/          # Caderno de anotações
@@ -127,7 +128,8 @@ src/
 │   ├── markdown-renderer.tsx # Renderizador markdown
 │   ├── credit-card-3d.tsx    # Visualização cartão 3D
 │   ├── bank-account-card.tsx # Card conta bancária
-│   └── document-card.tsx     # Card documentos
+│   ├── document-card.tsx     # Card documentos
+│   └── vault-unlock.tsx      # Tela de desbloqueio do vault
 ├── contexts/
 │   ├── vault-context.tsx     # Contexto do cofre
 │   ├── sound-context.tsx     # Contexto de sons
@@ -137,9 +139,9 @@ src/
 │   ├── supabase.ts           # Cliente Supabase (browser)
 │   ├── supabase-server.ts    # Cliente Supabase (server)
 │   ├── supabase-middleware.ts# Middleware de auth
-│   ├── supabase-admin.ts     # Cliente admin
-│   ├── vault.ts              # Gerenciamento do cofre
-│   ├── vault-crypto.ts       # Criptografia do cofre
+│   ├── supabase-admin.ts     # Cliente admin (service role)
+│   ├── vault.ts              # Gerenciamento do cofre (chave em memória)
+│   ├── vault-crypto.ts       # Criptografia AES-GCM do cofre
 │   ├── mercadopago.ts        # Integração Mercado Pago
 │   ├── sounds.ts             # Sistema de sons
 │   ├── themes.ts             # Temas visuais
@@ -147,6 +149,8 @@ src/
 ├── data/
 │   ├── shopping-items.ts     # Itens de supermercado
 │   └── custom-shopping-items.ts # Itens personalizados
-└── types/
-    └── index.ts              # Tipos TypeScript
+├── types/
+│   └── index.ts              # Tipos TypeScript
+└── public/
+    └── sw.js                 # Service worker (PWA)
 ```

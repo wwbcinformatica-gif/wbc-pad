@@ -119,3 +119,25 @@ Todas as solicitações foram implementadas com sucesso:
 
 ### 4. Estabilidade de autenticação
 - [x] Padronizado uso de `getUser()` em todas as páginas (CRUD e listagens) para garantir sessão sempre válida.
+
+---
+
+## 🛠️ FIXES 19/07/2026 (Noite)
+
+### 5. Proxy bloqueando /api/config
+- [x] **Problema:** Landing page não refletia alterações no trial_days.
+- [x] **Causa raiz:** `proxy.ts` redirecionava toda requisição sem cookie de auth para `/login`. `/api/config` não estava no whitelist.
+- [x] **Correção:** Adicionado `/api/config` ao whitelist do proxy.
+- **Arquivo:** `src/proxy.ts`
+
+### 6. Service Worker cacheando dados do Supabase
+- [x] **Problema:** Após criar/editar registros, listas só atualizavam com CTRL+F5.
+- [x] **Causa raiz:** Service worker usava estratégia **Cache-First** para toda requisição GET, incluindo chamadas à API do Supabase (`*.supabase.co`).
+- [x] **Correção:** SW agora ignora cache para requisições Supabase (sempre busca da rede). Cache renomeado para forçar limpeza.
+- **Arquivo:** `public/sw.js`
+
+### 7. Vault com persistência inadequada
+- [x] **Problema:** Chave do vault ficava salva em localStorage, então após logout/login não pedia a senha novamente.
+- [x] **Causa raiz:** `unlockVault()` exportava a chave raw e salvava em localStorage. `ensureInitialized()` reimportava automaticamente.
+- [x] **Correção:** Removida persistência em localStorage. Chave agora fica apenas em memória. `lockVault()` é chamado no logout.
+- **Arquivos:** `src/lib/vault.ts`, `src/components/vault-unlock.tsx`, `src/app/dashboard/layout.tsx`
