@@ -6,6 +6,7 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname.startsWith("/register") ||
     request.nextUrl.pathname.startsWith("/forgot-password") ||
     request.nextUrl.pathname.startsWith("/api/webhooks") ||
+    request.nextUrl.pathname.startsWith("/api/config") ||
     request.nextUrl.pathname === "/"
 
   if (isAuthPage) return NextResponse.next({ request })
