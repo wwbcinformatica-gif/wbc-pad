@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { createClient } from "@/lib/supabase"
 import { deriveKey, createVerificationHash, generateSalt, decrypt, encrypt } from "@/lib/vault-crypto"
-import { unlockVault, isVaultUnlocked, ensureInitialized } from "@/lib/vault"
+import { unlockVault, isVaultUnlocked } from "@/lib/vault"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Lock, Unlock, KeyRound, AlertCircle } from "lucide-react"
@@ -25,7 +25,6 @@ export default function VaultUnlock({ children }: VaultUnlockProps) {
   }, [])
 
   async function checkVault() {
-    await ensureInitialized()
     if (isVaultUnlocked()) {
       setStatus("unlocked")
       return

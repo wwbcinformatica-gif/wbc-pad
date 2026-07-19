@@ -80,6 +80,8 @@ export default function DashboardLayout({
   async function handleLogout() {
     const supabase = createClient()
     await supabase.auth.signOut()
+    const { lockVault } = await import("@/lib/vault")
+    lockVault()
     router.push("/login")
     router.refresh()
   }
