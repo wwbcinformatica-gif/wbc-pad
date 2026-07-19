@@ -1,4 +1,4 @@
-# Status do Projeto WBC Notepad - 22/05/2026
+# Status do Projeto WBC Notepad - 19/07/2026
 
 ## ✅ CONCLUÍDO
 
@@ -10,7 +10,7 @@
 
 ### 2. URLs do Projeto
 - **Produção:** https://wbc-notepad.vercel.app
-- **Deploy:** https://wbc-notepad-ebnndq68y-wwbcinformatica-9968s-projects.vercel.app
+- **Deploy:** https://wbc-notepad-1dnw28buh-wwbcinformatica-9968s-projects.vercel.app
 
 ### 3. Segurança Implementada
 - Chaves corretas configuradas no Vercel
@@ -24,28 +24,34 @@
 - [x] Implementar preview de som ao clicar nos botões de seleção
 - [x] Implementar salvamento das escolhas na base de dados
 
+### 5. Fix Crítico: Persistência de Dados (19/07/2026) ✅
+- [x] **Problema:** Nenhuma alteração era salva em nenhum menu (senhas, caderno, códigos, checklist, notes)
+- [x] **Causa raiz:** `src/lib/supabase.ts` criava um cliente mock como singleton que retornava `error: null` em toda operação, fazendo falhas silenciosas
+- [x] **Correção:** Removido cliente mock e singleton quebrado. Agora `createClient()` cria um novo cliente real a cada chamada
+- [x] **Deploy:** Produção atualizada em https://wbc-notepad.vercel.app
+
 ---
 
 ## 🔄 IMPLEMENTAÇÕES TÉCNICAS
 
-### 5. Migração de Toggles
+### 6. Migração de Toggles
 - **Antes:** Toggles na lateral do dashboard
 - **Depois:** Toggles integrados na página de configurações
 - **Benefício:** Organização centralizada das preferências
 
-### 6. Sistema de Sonos Aprimorado
+### 7. Sistema de Sonos Aprimorado
 - **Novos presets:** Grave, Agudo, Seco, Violoncelo, Piano, Guitarra, Tambor, Flauta, Metal, Digital
 - **Qualidade:** Sons mais graves, secos e grossos para melhor experiência de click
 - **Preview:** Ouve o som antes de escolher
 - **Descrições:** Cada som tem descrição clara e útil
 
-### 7. Persistência de Dados
+### 8. Persistência de Dados
 - **Tabela criada:** `user_settings` no Supabase
 - **Campos:** `sound_enabled`, `sound_volume`, `sound_type`, `nav_sound`
 - **Trigger:** Cria automática para novos usuários
 - **RLS:** Políticas de segurança implementadas
 
-### 8. Salvar Configurações
+### 9. Salvar Configurações
 - **Botão "Salvar Configurações"** na página de configurações
 - **Feedback visual:** "Salvo!" após confirmação
 - **Backup:** Mantém localStorage enquanto persiste no banco
@@ -60,6 +66,7 @@
 - **Sound Context:** `src/contexts/sound-context.tsx` - Adicionou métodos de banco
 - **Sounds Library:** `src/lib/sounds.ts` - Novos presets com melhor qualidade sonora
 - **Supabase Schema:** `supabase-schema.sql` - Tabela `user_settings` com trigger
+- **Supabase Client:** `src/lib/supabase.ts` - Removido mock client e singleton (fix de persistência)
 
 ### Toggles Disponíveis em Configurações
 1. **Toggle Principal** - Ativa/Desativa som geral
@@ -76,14 +83,6 @@
 
 ---
 
-## 🎯 PRÓXIMOS PASSOS
-1. [x] Testar todas as funcionalidades no ambiente de produção
-2. [x] Validar salvamento de configurações no banco de dados
-3. [x] Verificar que os sons estão agradáveis e funcionais
-4. [x] Confirmar que os toggles estão na página correta
-
----
-
 ## ✅ STATUS FINAL: 100% CONCLUÍDO
 
 Todas as solicitações foram implementadas com sucesso:
@@ -91,6 +90,7 @@ Todas as solicitações foram implementadas com sucesso:
 - ✅ Sons melhorados (graves, secos, grossos)
 - ✅ Preview de som ao selecionar
 - ✅ Salvamento persistente no banco de dados
+- ✅ Fix de persistência de dados em todos os menus
 - ✅ Deploy realizado em produção
 
-**Projeto está pronto para uso com todas as melhorias solicitadas!** 🎉
+**Projeto está pronto para uso com todas as melhorias solicitadas!**

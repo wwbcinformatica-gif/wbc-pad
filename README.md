@@ -17,9 +17,13 @@ Transforme o caderno de senhas físico em um app online com assinatura.
 - 8 categorias de senha: Wi-Fi, Cartão, Sites, Documentos, Contas, Email, SSH, Outros
 - CRUD completo de senhas
 - Copiar/mostrar/esconder senhas
+- Caderno de anotações com editor rich text
+- Códigos com syntax highlighting
+- Lista de compras com emojis e categorias
 - Período de teste grátis (7 dias)
 - Assinatura mensal via Mercado Pago
 - Painel admin (gerenciar usuários)
+- Backup e exportação de dados
 - PWA (instalável como app)
 - Design responsivo
 
@@ -99,11 +103,45 @@ src/
 │   │   │       ├── page.tsx      # Listar registros
 │   │   │       ├── new/page.tsx  # Novo registro
 │   │   │       └── [id]/edit/    # Editar registro
+│   │   ├── caderno/          # Caderno de anotações
+│   │   ├── codigos/          # Editor de código
+│   │   ├── checklist/        # Lista de compras
+│   │   ├── notes/            # Notas rápidas
+│   │   ├── agenda/           # Agenda/calendário
 │   │   ├── admin/page.tsx    # Painel admin
-│   │   └── subscription/     # Gerenciar assinatura
-│   └── api/webhooks/mercadopago/  # Webhook MP
-├── components/ui/            # Componentes reutilizáveis
-├── lib/                      # Utilitários (supabase, etc.)
-├── types/                    # Tipos TypeScript
-└── proxy.ts                  # Auth middleware
+│   │   ├── settings/         # Configurações
+│   │   ├── subscription/     # Gerenciar assinatura
+│   │   └── backup/           # Backup dos dados
+│   └── api/
+│       ├── webhooks/mercadopago/  # Webhook MP
+│       └── mercadopago/           # API Mercado Pago
+├── components/
+│   ├── ui/                   # Componentes reutilizáveis
+│   ├── caderno-editor.tsx    # Editor do caderno
+│   ├── code-editor.tsx       # Editor de código
+│   ├── markdown-renderer.tsx # Renderizador markdown
+│   ├── credit-card-3d.tsx    # Visualização cartão 3D
+│   ├── bank-account-card.tsx # Card conta bancária
+│   └── document-card.tsx     # Card documentos
+├── contexts/
+│   ├── vault-context.tsx     # Contexto do cofre
+│   ├── sound-context.tsx     # Contexto de sons
+│   ├── font-size-context.tsx # Tamanho da fonte
+│   └── code-theme-context.tsx# Tema do editor de código
+├── lib/
+│   ├── supabase.ts           # Cliente Supabase (browser)
+│   ├── supabase-server.ts    # Cliente Supabase (server)
+│   ├── supabase-middleware.ts# Middleware de auth
+│   ├── supabase-admin.ts     # Cliente admin
+│   ├── vault.ts              # Gerenciamento do cofre
+│   ├── vault-crypto.ts       # Criptografia do cofre
+│   ├── mercadopago.ts        # Integração Mercado Pago
+│   ├── sounds.ts             # Sistema de sons
+│   ├── themes.ts             # Temas visuais
+│   └── utils.ts              # Utilitários
+├── data/
+│   ├── shopping-items.ts     # Itens de supermercado
+│   └── custom-shopping-items.ts # Itens personalizados
+└── types/
+    └── index.ts              # Tipos TypeScript
 ```
