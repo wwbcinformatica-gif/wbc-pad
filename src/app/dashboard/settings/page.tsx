@@ -11,7 +11,6 @@ import InstallApp from "@/components/install-app"
 import { Volume2, VolumeX, Music, Palette, Check, Play, ArrowLeft, Share2, Copy, ExternalLink, Database } from "lucide-react"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase"
-import { testDatabaseConnection } from "@/lib/supabase"
 
 export default function SettingsPage() {
   const router = useRouter()
@@ -47,12 +46,11 @@ export default function SettingsPage() {
         console.log('User found:', user.email)
         setUserId(user.id)
         
-        // Test database connection with better error handling
+        // Test database connection
         console.log('Testing database connection...')
         try {
-          const connected = await testDatabaseConnection()
-          console.log('Database connection result:', connected)
-          setDbConnected(connected)
+          const { error: dbErr } = await supabase.from('notes').select('id').limit(1)
+          setDbConnected(!dbErr)
         } catch (dbError) {
           console.error('Database test error:', dbError)
           setDbConnected(false)
