@@ -30,7 +30,7 @@ export default function VaultUnlock({ children }: VaultUnlockProps) {
       return
     }
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
+    if (!user) { setStatus("setup"); return }
 
     const vault_hash = user.user_metadata?.vault_hash
     const vault_salt = user.user_metadata?.vault_salt
@@ -65,6 +65,7 @@ export default function VaultUnlock({ children }: VaultUnlockProps) {
 
       if (updateError) {
         setError("Erro ao salvar: " + updateError.message)
+        setSaving(false)
         return
       }
 
@@ -82,13 +83,14 @@ export default function VaultUnlock({ children }: VaultUnlockProps) {
     setSaving(true)
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
+      if (!user) { setSaving(false); return }
 
       const vault_hash = user.user_metadata?.vault_hash
       const vault_salt = user.user_metadata?.vault_salt
 
       if (!vault_hash || !vault_salt) {
         setError("Vault não configurado")
+        setSaving(false)
         return
       }
 
@@ -96,6 +98,7 @@ export default function VaultUnlock({ children }: VaultUnlockProps) {
 
       if (computedHash !== vault_hash) {
         setError("Chave inválida")
+        setSaving(false)
         return
       }
 
@@ -119,7 +122,7 @@ export default function VaultUnlock({ children }: VaultUnlockProps) {
 
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user?.email) return
+      if (!user?.email) { setSaving(false); return }
 
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email: user.email,
