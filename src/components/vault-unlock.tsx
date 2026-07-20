@@ -6,7 +6,7 @@ import { deriveKey, createVerificationHash, generateSalt, decrypt, encrypt } fro
 import { unlockVault, isVaultUnlocked } from "@/lib/vault"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Lock, Unlock, KeyRound, AlertCircle } from "lucide-react"
+import { Lock, Unlock, KeyRound, AlertCircle, Trash2, RotateCcw } from "lucide-react"
 
 interface VaultUnlockProps {
   children: React.ReactNode
@@ -108,6 +108,63 @@ export default function VaultUnlock({ children }: VaultUnlockProps) {
     setSaving(false)
   }
 
+  const [showResetConfirm, setShowResetConfirm] = useState(false)
+  const [accountPassword, setAccountPassword] = useState("")
+
+  async function handleResetVault(e: React.FormEvent) {
+    e.preventDefault()
+    if (!accountPassword) return
+    setSaving(true)
+    setError("")
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user?.email) return
+
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: accountPassword,
+      })
+
+      if (signInError) {
+        setError("Senha da conta incorreta")
+        setSaving(false)
+        return
+      }
+
+      const { error: deleteError } = await supabase
+        .from("passwords")
+        .update({ fields: {} })
+        .eq("user_id", user.id)
+        .not("fields", "is", null)
+
+      if (deleteError) {
+        setError("Erro ao limpar dados: " + deleteError.message)
+        setSaving(false)
+        return
+      }
+
+      const { error: metaError } = await supabase.auth.updateUser({
+        data: { vault_hash: null, vault_salt: null }
+      })
+
+      if (metaError) {
+        setError("Erro ao resetar vault: " + metaError.message)
+        setSaving(false)
+        return
+      }
+
+      setPassword("")
+      setConfirmPassword("")
+      setAccountPassword("")
+      setShowResetConfirm(false)
+      setStatus("setup")
+    } catch {
+      setError("Erro ao resetar o vault")
+    }
+    setSaving(false)
+  }
+
   if (status === "unlocked") {
     return <>{children}</>
   }
@@ -177,13 +234,65 @@ export default function VaultUnlock({ children }: VaultUnlockProps) {
               </div>
             )}
 
-            <Button type="submit" loading={saving} className="w-full">
-              {status === "setup" ? (
-                <><KeyRound className="w-4 h-4 mr-2" /> Configurar Vault</>
-              ) : (
-                <><Unlock className="w-4 h-4 mr-2" /> Desbloquear</>
-              )}
-            </Button>
+            {showResetConfirm ? (
+              <div className="space-y-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-xs text-red-700 font-medium">
+                  Confirme com sua <strong>senha da conta</strong> (email) para resetar o vault.
+                  Todos os dados criptografados serão perdidos.
+                </p>
+                <input
+                  type="password"
+                  className="w-full rounded-lg border border-red-300 px-3 py-2 text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200 bg-white"
+                  placeholder="Digite sua senha da conta"
+                  value={accountPassword}
+                  onChange={(e) => setAccountPassword(e.target.value)}
+                  autoFocus
+                />
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => { setShowResetConfirm(false); setAccountPassword(""); setError("") }}
+                    className="text-xs"
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    loading={saving}
+                    disabled={!accountPassword}
+                    onClick={handleResetVault}
+                    className="bg-red-500 hover:bg-red-600 text-white text-xs"
+                  >
+                    <Trash2 className="w-3 h-3 mr-1" /> Resetar Vault
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <Button type="submit" loading={saving} className="w-full">
+                {status === "setup" ? (
+                  <><KeyRound className="w-4 h-4 mr-2" /> Configurar Vault</>
+                ) : (
+                  <><Unlock className="w-4 h-4 mr-2" /> Desbloquear</>
+                )}
+              </Button>
+            )}
+
+            {status === "unlock" && !showResetConfirm && (
+              <div className="text-center pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowResetConfirm(true)}
+                  disabled={saving}
+                  className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-red-500 transition-colors"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  Esqueci a chave mestra — resetar vault
+                </button>
+              </div>
+            )}
           </form>
         </CardContent>
       </Card>
