@@ -47,7 +47,7 @@ export default function RegisterPage() {
     }
 
     if (data.user) {
-      await supabase.from("profiles").insert({
+      const { error: profileErr } = await supabase.from("profiles").insert({
         id: data.user.id,
         email,
         name,
@@ -55,6 +55,8 @@ export default function RegisterPage() {
         subscription_status: "trial",
         trial_ends_at: new Date(Date.now() + trialDays * 24 * 60 * 60 * 1000).toISOString(),
       })
+      // Se RLS bloqueou, o perfil sera criado automaticamente no primeiro login
+      if (profileErr) console.warn("Perfil sera criado no primeiro login:", profileErr.message)
     }
 
     setSuccess(true)

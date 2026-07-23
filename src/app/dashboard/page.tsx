@@ -57,8 +57,22 @@ export default function DashboardPage() {
     }
 
     const { data: profile } = await supabase
-      .from("profiles").select("subscription_status").eq("id", user.id).single()
-    if (profile) setSubscriptionStatus(profile.subscription_status)
+      .from("profiles").select("subscription_status").eq("id", user.id).maybeSingle()
+
+    if (!profile) {
+      // Auto-criar perfil se nao existe (cadastro incompleto via RLS)
+      await supabase.from("profiles").insert({
+        id: user.id,
+        email: user.email,
+        name: user.user_metadata?.name || user.email?.split("@")[0] || "Usuario",
+        role: "user",
+        subscription_status: "trial",
+        trial_ends_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      })
+      setSubscriptionStatus("trial")
+    } else {
+      setSubscriptionStatus(profile.subscription_status)
+    }
 
     const { data: passwords } = await supabase
       .from("passwords").select("*").eq("user_id", user.id).order("created_at", { ascending: false })
