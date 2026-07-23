@@ -353,11 +353,19 @@ export default function AdminPage() {
   }
 
   async function deleteUser(userId: string) {
-    if (!confirm("Tem certeza que deseja excluir este usuário?")) return
-    const { error: pwError } = await supabase.from("passwords").delete().eq("user_id", userId)
-    if (pwError) { alert("Erro ao excluir senhas: " + pwError.message); return }
-    const { error: profileError } = await supabase.from("profiles").delete().eq("id", userId)
-    if (profileError) { alert("Erro ao excluir perfil: " + profileError.message); return }
+    if (!confirm("Tem certeza que deseja excluir este usuário e todos os seus dados?")) return
+    // Excluir dados de todas as tabelas relacionadas
+    await supabase.from("passwords").delete().eq("user_id", userId)
+    await supabase.from("notes").delete().eq("user_id", userId)
+    await supabase.from("profiles").delete().eq("id", userId)
+    // Excluir do auth.users via API admin
+    try {
+      await fetch("/api/admin/delete-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      })
+    } catch (e) { console.warn("Não foi possível excluir do auth:", e) }
     loadUsers()
     alert("Usuário excluído com sucesso!")
   }
